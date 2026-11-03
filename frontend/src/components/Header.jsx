@@ -1,0 +1,440 @@
+import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { 
+  Phone, Mail, MapPin, GraduationCap, Menu, X, ChevronDown, ChevronRight,
+  ExternalLink, Lock, Calendar, BookOpen, Award, Users 
+} from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
+
+export const Header = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [mobileSubmenu, setMobileSubmenu] = useState(null);
+  const { isAuthenticated, user } = useAuth();
+  const { navbarBrandName, navbarBrandSub, navbarBrandTagline, settings } = useSettings();
+  const navigate = useNavigate();
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+    setMobileSubmenu(null);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+    setActiveDropdown(null);
+    setMobileSubmenu(null);
+  };
+
+  const toggleMobileSubmenu = (menu) => {
+    setMobileSubmenu(mobileSubmenu === menu ? null : menu);
+  };
+
+  const handleDropdownItemClick = (targetPath) => {
+    setActiveDropdown(null);
+    closeMobileMenu();
+
+    const hashIndex = targetPath.indexOf('#');
+    if (hashIndex !== -1) {
+      const targetHash = targetPath.substring(hashIndex + 1);
+      setTimeout(() => {
+        const element = document.getElementById(targetHash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 80);
+    } else {
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 50);
+    }
+  };
+
+  return (
+    <>
+      {/* Top Contact Bar */}
+      <div className="top-bar">
+        <div className="container">
+          <div className="top-bar-inner">
+            <div className="top-bar-left">
+              <span className="top-bar-item">
+                <MapPin size={13} color="#D4AF37" /> {settings.campus_address ? settings.campus_address.split(',').slice(0, 2).join(',') : 'Malleshwaram, Bengaluru - 560003'}
+              </span>
+              <a href={`tel:${settings.phone_primary || '+918023456789'}`} className="top-bar-item">
+                <Phone size={13} color="#D4AF37" /> {settings.phone_primary || '+91 80 2345 6789'}
+              </a>
+              <a href={`mailto:${settings.email_admissions || 'admissions@svcpuc.edu.in'}`} className="top-bar-item">
+                <Mail size={13} color="#D4AF37" /> {settings.email_admissions || 'admissions@svcpuc.edu.in'}
+              </a>
+            </div>
+            <div className="top-bar-right">
+              <span className="top-bar-item" style={{ color: '#d4af37', fontWeight: '600' }}>
+                Affiliation Code: {settings.college_code || 'KA-PUC-0842'}
+              </span>
+              {isAuthenticated ? (
+                <Link to="/admin" className="top-bar-item" style={{ color: '#60a5fa', fontWeight: '700' }}>
+                  <Lock size={12} /> Admin Dashboard ({user?.username})
+                </Link>
+              ) : (
+                <Link to="/admin/login" className="top-bar-item">
+                  <Lock size={12} /> Staff / Admin Login
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Navigation Header */}
+      <header className="main-header">
+        <div className="container">
+          <nav className="navbar">
+            <Link to="/" className="brand-wrap" onClick={closeMobileMenu}>
+              <div className="brand-logo-icon">
+                <GraduationCap size={26} />
+              </div>
+              <div className="brand-text-col">
+                <span className="brand-name">{navbarBrandName}</span>
+                <span className="brand-sub">{navbarBrandSub}</span>
+              </div>
+            </Link>
+
+            {/* Desktop Navigation Links - Serial Order */}
+            <ul className="nav-links">
+              <li className="nav-item">
+                <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  Home
+                </NavLink>
+              </li>
+
+              {/* About Us Dropdown */}
+              <li 
+                className={`nav-item ${activeDropdown === 'about' ? 'dropdown-open' : ''}`}
+                onMouseEnter={() => setActiveDropdown('about')}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <NavLink to="/about" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  About Us <ChevronDown size={13} className="nav-chevron" />
+                </NavLink>
+                <div className="dropdown-menu">
+                  <Link 
+                    to="/about#history" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/about#history')}
+                  >
+                    College History & Overview
+                  </Link>
+                  <Link 
+                    to="/about#vision-mission" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/about#vision-mission')}
+                  >
+                    Vision & Mission
+                  </Link>
+                  <Link 
+                    to="/about#principal-message" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/about#principal-message')}
+                  >
+                    Principal's Message
+                  </Link>
+                  <Link 
+                    to="/about#management" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/about#management')}
+                  >
+                    Board of Management
+                  </Link>
+                  <Link 
+                    to="/faculty" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/faculty')}
+                  >
+                    Faculty & Staff Directory
+                  </Link>
+                </div>
+              </li>
+
+              {/* Academics Dropdown */}
+              <li 
+                className={`nav-item ${activeDropdown === 'academics' ? 'dropdown-open' : ''}`}
+                onMouseEnter={() => setActiveDropdown('academics')}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <NavLink to="/academics" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  Academics <ChevronDown size={13} className="nav-chevron" />
+                </NavLink>
+                <div className="dropdown-menu">
+                  <Link 
+                    to="/academics?stream=SCIENCE#combinations" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/academics?stream=SCIENCE#combinations')}
+                  >
+                    Science Stream (PCMB, PCMC)
+                  </Link>
+                  <Link 
+                    to="/academics?stream=COMMERCE#combinations" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/academics?stream=COMMERCE#combinations')}
+                  >
+                    Commerce Stream (CEBA, MEBA)
+                  </Link>
+                  <Link 
+                    to="/academics#coaching" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/academics#coaching')}
+                  >
+                    CET, NEET & JEE Coaching
+                  </Link>
+                  <Link 
+                    to="/academics#calendar" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/academics#calendar')}
+                  >
+                    Academic Calendar
+                  </Link>
+                </div>
+              </li>
+
+              {/* Admissions Dropdown */}
+              <li 
+                className={`nav-item ${activeDropdown === 'admissions' ? 'dropdown-open' : ''}`}
+                onMouseEnter={() => setActiveDropdown('admissions')}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <NavLink to="/admissions" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  Admissions <ChevronDown size={13} className="nav-chevron" />
+                </NavLink>
+                <div className="dropdown-menu">
+                  <Link 
+                    to="/admissions#guidelines" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/admissions#guidelines')}
+                  >
+                    Admission Guidelines & Eligibility
+                  </Link>
+                  <Link 
+                    to="/admissions#enquiry-form" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/admissions#enquiry-form')}
+                  >
+                    Online Admission Enquiry
+                  </Link>
+                  <Link 
+                    to="/admissions#track" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/admissions#track')}
+                  >
+                    Track Application Status
+                  </Link>
+                  <Link 
+                    to="/admissions#scholarships" 
+                    className="dropdown-item" 
+                    onClick={() => handleDropdownItemClick('/admissions#scholarships')}
+                  >
+                    Scholarships & Fee Structure
+                  </Link>
+                </div>
+              </li>
+
+              <li className="nav-item">
+                <NavLink to="/examinations" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  Examinations
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink to="/facilities" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  Facilities
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink to="/gallery" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  Gallery
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink to="/student-life" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  Student Life
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink to="/news" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  News & Events
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink to="/contact" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  Contact
+                </NavLink>
+              </li>
+            </ul>
+
+            {/* Header Right Action Buttons */}
+            <div className="navbar-actions">
+              <Link 
+                to="/admissions#enquiry-form" 
+                className="btn btn-gold btn-sm nav-cta-btn"
+                onClick={() => handleDropdownItemClick('/admissions#enquiry-form')}
+              >
+                Apply Now
+              </Link>
+              <button
+                onClick={toggleMobileMenu}
+                className="mobile-toggle"
+                aria-label="Toggle navigation menu"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          </nav>
+
+          {/* Mobile Drawer */}
+          {mobileMenuOpen && (
+            <div className="mobile-drawer">
+              <NavLink to="/" end onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+                Home
+              </NavLink>
+
+              {/* Mobile About Us with Submenu Toggle */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '1rem' }}>
+                  <NavLink to="/about" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`} style={{ flex: 1 }}>
+                    About Us
+                  </NavLink>
+                  <button 
+                    onClick={() => toggleMobileSubmenu('about')} 
+                    style={{ background: 'none', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--primary-700)' }}
+                    aria-label="Toggle About Submenu"
+                  >
+                    <ChevronDown size={18} style={{ transform: mobileSubmenu === 'about' ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                  </button>
+                </div>
+                {mobileSubmenu === 'about' && (
+                  <div className="mobile-submenu">
+                    <Link to="/about#history" onClick={() => handleDropdownItemClick('/about#history')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> College History & Overview
+                    </Link>
+                    <Link to="/about#vision-mission" onClick={() => handleDropdownItemClick('/about#vision-mission')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Vision & Mission
+                    </Link>
+                    <Link to="/about#principal-message" onClick={() => handleDropdownItemClick('/about#principal-message')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Principal's Message
+                    </Link>
+                    <Link to="/about#management" onClick={() => handleDropdownItemClick('/about#management')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Board of Management
+                    </Link>
+                    <Link to="/faculty" onClick={() => handleDropdownItemClick('/faculty')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Faculty & Staff Directory
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Academics with Submenu Toggle */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '1rem' }}>
+                  <NavLink to="/academics" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`} style={{ flex: 1 }}>
+                    Academics
+                  </NavLink>
+                  <button 
+                    onClick={() => toggleMobileSubmenu('academics')} 
+                    style={{ background: 'none', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--primary-700)' }}
+                    aria-label="Toggle Academics Submenu"
+                  >
+                    <ChevronDown size={18} style={{ transform: mobileSubmenu === 'academics' ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                  </button>
+                </div>
+                {mobileSubmenu === 'academics' && (
+                  <div className="mobile-submenu">
+                    <Link to="/academics?stream=SCIENCE#combinations" onClick={() => handleDropdownItemClick('/academics?stream=SCIENCE#combinations')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Science Stream (PCMB, PCMC)
+                    </Link>
+                    <Link to="/academics?stream=COMMERCE#combinations" onClick={() => handleDropdownItemClick('/academics?stream=COMMERCE#combinations')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Commerce Stream (CEBA, MEBA)
+                    </Link>
+                    <Link to="/academics#coaching" onClick={() => handleDropdownItemClick('/academics#coaching')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> CET, NEET & JEE Coaching
+                    </Link>
+                    <Link to="/academics#calendar" onClick={() => handleDropdownItemClick('/academics#calendar')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Academic Calendar
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Admissions with Submenu Toggle */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '1rem' }}>
+                  <NavLink to="/admissions" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`} style={{ flex: 1 }}>
+                    Admissions
+                  </NavLink>
+                  <button 
+                    onClick={() => toggleMobileSubmenu('admissions')} 
+                    style={{ background: 'none', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--primary-700)' }}
+                    aria-label="Toggle Admissions Submenu"
+                  >
+                    <ChevronDown size={18} style={{ transform: mobileSubmenu === 'admissions' ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                  </button>
+                </div>
+                {mobileSubmenu === 'admissions' && (
+                  <div className="mobile-submenu">
+                    <Link to="/admissions#guidelines" onClick={() => handleDropdownItemClick('/admissions#guidelines')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Admission Guidelines & Eligibility
+                    </Link>
+                    <Link to="/admissions#enquiry-form" onClick={() => handleDropdownItemClick('/admissions#enquiry-form')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Online Admission Enquiry
+                    </Link>
+                    <Link to="/admissions#track" onClick={() => handleDropdownItemClick('/admissions#track')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Track Application Status
+                    </Link>
+                    <Link to="/admissions#scholarships" onClick={() => handleDropdownItemClick('/admissions#scholarships')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Scholarships & Fee Structure
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              <NavLink to="/examinations" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+                Examinations
+              </NavLink>
+              <NavLink to="/facilities" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+                Facilities & Labs
+              </NavLink>
+              <NavLink to="/gallery" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+                Photo Gallery
+              </NavLink>
+              <NavLink to="/student-life" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+                Student Life & Clubs
+              </NavLink>
+              <NavLink to="/news" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+                News & Events
+              </NavLink>
+              <NavLink to="/contact" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+                Contact Us
+              </NavLink>
+
+              <div className="mobile-drawer-footer">
+                <Link 
+                  to="/admissions#enquiry-form" 
+                  onClick={() => handleDropdownItemClick('/admissions#enquiry-form')} 
+                  className="btn btn-gold btn-sm" 
+                  style={{ flex: 1, textAlign: 'center' }}
+                >
+                  Apply For Admission
+                </Link>
+                <Link to="/admin/login" onClick={closeMobileMenu} className="btn btn-primary btn-sm">
+                  Staff Login
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
+    </>
+  );
+};

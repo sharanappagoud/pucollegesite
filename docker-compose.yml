@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # MySQL 8 Database
+  mysql:
+    image: mysql:8.0
+    container_name: svcpuc-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: mpuc_college
+      MYSQL_USER: mpuc_app
+      MYSQL_PASSWORD: Mpuc@Secure2026!
+      MYSQL_ROOT_PASSWORD: RootSecure2026!
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./backend/src/main/resources/db/migration/V1__init_schema.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./backend/src/main/resources/db/migration/V2__seed_demo_data.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+      - ./backend/src/main/resources/db/migration/V3__admin_cms_modules.sql:/docker-entrypoint-initdb.d/03-admin.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pRootSecure2026!"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - svcpuc-net
+
+  # Spring Boot 3 Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../deployment/Dockerfile.backend
+    container_name: svcpuc-backend
+    restart: always
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: mpuc_college
+      DB_USERNAME: mpuc_app
+      DB_PASSWORD: Mpuc@Secure2026!
+      APP_JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      APP_CORS_ALLOWED_ORIGINS: http://localhost,http://localhost:80,http://localhost:5173
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads-data:/app/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - svcpuc-net
+
+  # React Frontend with Nginx
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../deployment/Dockerfile.frontend
+    container_name: svcpuc-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - svcpuc-net
+
+networks:
+  svcpuc-net:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  uploads-data:
