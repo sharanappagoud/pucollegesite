@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { 
   Phone, Mail, MapPin, GraduationCap, Menu, X, ChevronDown, ChevronRight,
@@ -14,6 +14,18 @@ export const Header = () => {
   const { isAuthenticated, user } = useAuth();
   const { navbarBrandName, navbarBrandSub, navbarBrandTagline, settings } = useSettings();
   const navigate = useNavigate();
+
+  // Prevent background scrolling when mobile menu drawer is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -57,26 +69,26 @@ export const Header = () => {
         <div className="container">
           <div className="top-bar-inner">
             <div className="top-bar-left">
-              <span className="top-bar-item">
+              <span className="top-bar-item top-bar-address">
                 <MapPin size={13} color="#D4AF37" /> {settings.campus_address ? settings.campus_address.split(',').slice(0, 2).join(',') : 'Malleshwaram, Bengaluru - 560003'}
               </span>
-              <a href={`tel:${settings.phone_primary || '+918023456789'}`} className="top-bar-item">
+              <a href={`tel:${settings.phone_primary || '+918023456789'}`} className="top-bar-item top-bar-phone">
                 <Phone size={13} color="#D4AF37" /> {settings.phone_primary || '+91 80 2345 6789'}
               </a>
-              <a href={`mailto:${settings.email_admissions || 'admissions@svcpuc.edu.in'}`} className="top-bar-item">
+              <a href={`mailto:${settings.email_admissions || 'admissions@svcpuc.edu.in'}`} className="top-bar-item top-bar-email">
                 <Mail size={13} color="#D4AF37" /> {settings.email_admissions || 'admissions@svcpuc.edu.in'}
               </a>
             </div>
             <div className="top-bar-right">
-              <span className="top-bar-item" style={{ color: '#d4af37', fontWeight: '600' }}>
+              <span className="top-bar-item top-bar-code" style={{ color: '#d4af37', fontWeight: '600' }}>
                 Affiliation Code: {settings.college_code || 'KA-PUC-0842'}
               </span>
               {isAuthenticated ? (
-                <Link to="/admin" className="top-bar-item" style={{ color: '#60a5fa', fontWeight: '700' }}>
+                <Link to="/admin" className="top-bar-item top-bar-auth" style={{ color: '#60a5fa', fontWeight: '700' }}>
                   <Lock size={12} /> Admin Dashboard ({user?.username})
                 </Link>
               ) : (
-                <Link to="/admin/login" className="top-bar-item">
+                <Link to="/admin/login" className="top-bar-item top-bar-auth">
                   <Lock size={12} /> Staff / Admin Login
                 </Link>
               )}
@@ -302,13 +314,13 @@ export const Header = () => {
 
               {/* Mobile About Us with Submenu Toggle */}
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '0.75rem' }}>
                   <NavLink to="/about" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`} style={{ flex: 1 }}>
                     About Us
                   </NavLink>
                   <button 
                     onClick={() => toggleMobileSubmenu('about')} 
-                    style={{ background: 'none', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--primary-700)' }}
+                    className="mobile-submenu-toggle"
                     aria-label="Toggle About Submenu"
                   >
                     <ChevronDown size={18} style={{ transform: mobileSubmenu === 'about' ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
@@ -337,13 +349,13 @@ export const Header = () => {
 
               {/* Mobile Academics with Submenu Toggle */}
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '0.75rem' }}>
                   <NavLink to="/academics" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`} style={{ flex: 1 }}>
                     Academics
                   </NavLink>
                   <button 
                     onClick={() => toggleMobileSubmenu('academics')} 
-                    style={{ background: 'none', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--primary-700)' }}
+                    className="mobile-submenu-toggle"
                     aria-label="Toggle Academics Submenu"
                   >
                     <ChevronDown size={18} style={{ transform: mobileSubmenu === 'academics' ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
@@ -369,13 +381,13 @@ export const Header = () => {
 
               {/* Mobile Admissions with Submenu Toggle */}
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '0.75rem' }}>
                   <NavLink to="/admissions" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`} style={{ flex: 1 }}>
                     Admissions
                   </NavLink>
                   <button 
                     onClick={() => toggleMobileSubmenu('admissions')} 
-                    style={{ background: 'none', border: 'none', padding: '0.5rem', cursor: 'pointer', color: 'var(--primary-700)' }}
+                    className="mobile-submenu-toggle"
                     aria-label="Toggle Admissions Submenu"
                   >
                     <ChevronDown size={18} style={{ transform: mobileSubmenu === 'admissions' ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
@@ -427,13 +439,24 @@ export const Header = () => {
                 >
                   Apply For Admission
                 </Link>
-                <Link to="/admin/login" onClick={closeMobileMenu} className="btn btn-primary btn-sm">
-                  Staff Login
-                </Link>
+                {isAuthenticated ? (
+                  <Link to="/admin" onClick={closeMobileMenu} className="btn btn-primary btn-sm" style={{ whiteSpace: 'nowrap' }}>
+                    Admin ({user?.username})
+                  </Link>
+                ) : (
+                  <Link to="/admin/login" onClick={closeMobileMenu} className="btn btn-primary btn-sm" style={{ whiteSpace: 'nowrap' }}>
+                    Staff Login
+                  </Link>
+                )}
               </div>
             </div>
           )}
         </div>
+
+        {/* Mobile Backdrop Overlay */}
+        {mobileMenuOpen && (
+          <div className="mobile-drawer-backdrop" onClick={closeMobileMenu} />
+        )}
       </header>
     </>
   );

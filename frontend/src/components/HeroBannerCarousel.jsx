@@ -186,6 +186,7 @@ export const HeroBannerCarousel = () => {
 
   return (
     <div
+      className="hero-carousel-wrapper"
       style={{
         position: 'relative',
         width: '100%',
@@ -205,6 +206,7 @@ export const HeroBannerCarousel = () => {
         return (
           <div
             key={slide.id || index}
+            className="hero-carousel-slide"
             style={{
               position: 'absolute',
               inset: 0,
@@ -288,6 +290,7 @@ export const HeroBannerCarousel = () => {
           <button
             onClick={prevSlide}
             aria-label="Previous Slide"
+            className="hero-nav-arrow hero-nav-prev"
             style={{
               position: 'absolute',
               left: '1.5rem',
@@ -325,6 +328,7 @@ export const HeroBannerCarousel = () => {
           <button
             onClick={nextSlide}
             aria-label="Next Slide"
+            className="hero-nav-arrow hero-nav-next"
             style={{
               position: 'absolute',
               right: '1.5rem',
