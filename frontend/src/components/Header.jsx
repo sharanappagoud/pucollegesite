@@ -146,11 +146,11 @@ export const Header = () => {
                     Board of Management
                   </Link>
                   <Link 
-                    to="/faculty" 
+                    to="/student-life" 
                     className="dropdown-item" 
-                    onClick={() => handleDropdownItemClick('/faculty')}
+                    onClick={() => handleDropdownItemClick('/student-life')}
                   >
-                    Faculty & Staff Directory
+                    Student Life
                   </Link>
                 </div>
               </li>
@@ -244,6 +244,12 @@ export const Header = () => {
               </li>
 
               <li className="nav-item">
+                <NavLink to="/faculty" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                  Faculty
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
                 <NavLink to="/facilities" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
                   Facilities
                 </NavLink>
@@ -252,12 +258,6 @@ export const Header = () => {
               <li className="nav-item">
                 <NavLink to="/gallery" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
                   Gallery
-                </NavLink>
-              </li>
-
-              <li className="nav-item">
-                <NavLink to="/student-life" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                  Student Life
                 </NavLink>
               </li>
 
@@ -328,8 +328,8 @@ export const Header = () => {
                     <Link to="/about#management" onClick={() => handleDropdownItemClick('/about#management')} className="mobile-sub-link">
                       <ChevronRight size={14} /> Board of Management
                     </Link>
-                    <Link to="/faculty" onClick={() => handleDropdownItemClick('/faculty')} className="mobile-sub-link">
-                      <ChevronRight size={14} /> Faculty & Staff Directory
+                    <Link to="/student-life" onClick={() => handleDropdownItemClick('/student-life')} className="mobile-sub-link">
+                      <ChevronRight size={14} /> Student Life
                     </Link>
                   </div>
                 )}
@@ -402,14 +402,14 @@ export const Header = () => {
               <NavLink to="/examinations" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
                 Examinations
               </NavLink>
+              <NavLink to="/faculty" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
+                Faculty
+              </NavLink>
               <NavLink to="/facilities" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
                 Facilities & Labs
               </NavLink>
               <NavLink to="/gallery" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
                 Photo Gallery
-              </NavLink>
-              <NavLink to="/student-life" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
-                Student Life & Clubs
               </NavLink>
               <NavLink to="/news" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
                 News & Events
