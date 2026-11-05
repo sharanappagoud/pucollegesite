@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { 
   Phone, Mail, MapPin, GraduationCap, Menu, X, ChevronDown, ChevronRight,
-  ExternalLink, Lock, Calendar, BookOpen, Award, Users, Search 
+  ExternalLink, Lock, Calendar, BookOpen, Award, Users, Search, Sparkles 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
@@ -177,6 +177,15 @@ export const Header = () => {
                     onClick={() => handleDropdownItemClick('/student-life')}
                   >
                     Student Life
+                  </Link>
+                  <Link 
+                    to="/virtual-tour" 
+                    className="dropdown-item" 
+                    style={{ color: '#0B2545', fontWeight: '700', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                    onClick={() => handleDropdownItemClick('/virtual-tour')}
+                  >
+                    <span>3D Virtual Tour</span>
+                    <span style={{ backgroundColor: '#D4AF37', color: '#0B2545', fontSize: '0.65rem', padding: '0.1rem 0.4rem', borderRadius: '4px', fontWeight: '800' }}>3D</span>
                   </Link>
                 </div>
               </li>
@@ -385,6 +394,9 @@ export const Header = () => {
                     </Link>
                     <Link to="/student-life" onClick={() => handleDropdownItemClick('/student-life')} className="mobile-sub-link">
                       <ChevronRight size={14} /> Student Life
+                    </Link>
+                    <Link to="/virtual-tour" onClick={() => handleDropdownItemClick('/virtual-tour')} className="mobile-sub-link" style={{ color: '#0B2545', fontWeight: '700' }}>
+                      <Sparkles size={14} color="#D4AF37" /> 3D Virtual Campus Tour
                     </Link>
                   </div>
                 )}

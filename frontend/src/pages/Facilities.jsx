@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Building, Microscope, BookOpen, Monitor, 
-  Trophy, Coffee, Music, CheckCircle2, Image as ImageIcon 
+  Trophy, Coffee, Music, CheckCircle2, Image as ImageIcon, Sparkles, ArrowRight 
 } from 'lucide-react';
 import api from '../services/api';
 
@@ -52,6 +53,11 @@ export const Facilities = () => {
           <p style={{ maxWidth: '650px', margin: '0 auto', color: '#cbd5e1', fontSize: '1.05rem' }}>
             A serene, vibrant learning environment equipped with modern science labs, computer suites, digital library, and sports amenities.
           </p>
+          <div style={{ marginTop: '1.75rem' }}>
+            <Link to="/virtual-tour" className="btn btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 14px rgba(212, 175, 55, 0.4)' }}>
+              <Sparkles size={16} /> Launch Interactive 3D Campus Tour <ArrowRight size={15} />
+            </Link>
+          </div>
         </div>
       </section>
 

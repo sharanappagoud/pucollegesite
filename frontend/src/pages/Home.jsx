@@ -10,6 +10,7 @@ import api from '../services/api';
 import { useSettings } from '../context/SettingsContext';
 import { useAuth } from '../context/AuthContext';
 import { HeroBannerCarousel } from '../components/HeroBannerCarousel';
+import { CampusTour3D } from '../components/CampusTour3D';
 
 export const Home = () => {
   const { user } = useAuth();
@@ -376,6 +377,77 @@ export const Home = () => {
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
             <Link to="/facilities" className="btn btn-outline-primary">
               Explore All Facilities & Laboratories <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive 3D Virtual Campus Experience */}
+      <section style={{
+        backgroundColor: '#071224',
+        borderTop: '2px solid rgba(212, 175, 55, 0.3)',
+        borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
+        padding: '4.5rem 0 5rem 0',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: '-20%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '750px',
+          height: '400px',
+          background: 'radial-gradient(circle, rgba(19, 62, 135, 0.28) 0%, rgba(0,0,0,0) 70%)',
+          pointerEvents: 'none'
+        }} />
+
+        <div className="container" style={{ position: 'relative', zIndex: 5 }}>
+          <div className="section-title-wrap" style={{ textAlign: 'center', maxWidth: '820px', margin: '0 auto 2.5rem auto' }}>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              backgroundColor: 'rgba(212, 175, 55, 0.18)',
+              color: '#D4AF37',
+              border: '1px solid rgba(212, 175, 55, 0.35)',
+              padding: '0.35rem 0.9rem',
+              borderRadius: '999px',
+              fontSize: '0.78rem',
+              fontWeight: '700',
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+              marginBottom: '0.85rem'
+            }}>
+              <Sparkles size={14} /> Interactive 3D Experience
+            </span>
+
+            <h2 className="section-title" style={{ color: '#ffffff', fontSize: 'clamp(1.8rem, 3.2vw, 2.5rem)' }}>
+              Step Inside Our Campus in 3D
+            </h2>
+
+            <p style={{ color: '#cbd5e1', fontSize: '1rem', lineHeight: '1.65' }}>
+              Take an interactive 360-degree virtual tour of {collegeName}'s physics, chemistry, and AI computing laboratories, digital library, and quadrangle. Drag to orbit, zoom into apparatus, and tap the glowing 3D pins to inspect equipment.
+            </p>
+          </div>
+
+          {/* Embedded 3D Viewport Component */}
+          <CampusTour3D isEmbedded={true} initialLocation="quadrangle" />
+
+          {/* Bottom Actions */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '1rem',
+            marginTop: '2rem',
+            flexWrap: 'wrap'
+          }}>
+            <Link to="/virtual-tour" className="btn btn-gold">
+              Launch Fullscreen 3D Walkthrough <ArrowRight size={16} />
+            </Link>
+            <Link to="/facilities" className="btn btn-outline-light">
+              View Laboratory Directory & Photo Gallery
             </Link>
           </div>
         </div>
