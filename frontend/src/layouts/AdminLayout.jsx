@@ -56,9 +56,9 @@ export const AdminLayout = () => {
         { name: 'Campus Photo Gallery', path: '/admin/gallery', icon: Camera },
         { name: "Principal's Desk", path: '/admin/principal-desk', icon: UserCheck },
         { name: 'Campus Facilities', path: '/admin/facilities', icon: Building2 },
-        { name: 'News & Announcements', path: '/admin/news', icon: Newspaper },
+        { name: 'Announcements Ticker & Notices', path: '/admin/notices', icon: Bell },
+        { name: 'News & Press Releases', path: '/admin/news', icon: Newspaper },
         { name: 'College Events', path: '/admin/events', icon: Calendar },
-        { name: 'Notices & Circulars', path: '/admin/notices', icon: Bell },
         { name: 'Testimonials & Reviews', path: '/admin/testimonials', icon: MessageSquareQuote }
       ]
     },

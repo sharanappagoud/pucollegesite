@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { 
   UserCheck, BookOpen, Users, Newspaper, 
   Calendar, MessageSquare, ArrowUpRight, Clock, 
-  AlertCircle, CheckCircle2, ShieldAlert, GraduationCap, Settings 
+  AlertCircle, CheckCircle2, ShieldAlert, GraduationCap, Settings, Bell 
 } from 'lucide-react';
 import api from '../services/api';
 import { useSettings } from '../context/SettingsContext';
@@ -43,6 +43,9 @@ export const Dashboard = () => {
         </div>
 
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <Link to="/admin/notices" className="btn btn-outline-primary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 600 }}>
+            <Bell size={15} /> Announcements Ticker
+          </Link>
           <Link to="/admin/examinations" className="btn btn-outline-primary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 600 }}>
             <GraduationCap size={15} /> Examinations & PDFs
           </Link>
