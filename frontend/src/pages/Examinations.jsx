@@ -630,22 +630,37 @@ export const Examinations = () => {
                       <CheckCircle2 size={14} /> Official Board Approved
                     </div>
 
-                    {exam.timeTableUrl ? (
-                      <a
-                        href={exam.timeTableUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        download
-                        className="btn btn-outline-primary btn-sm"
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem' }}
-                      >
-                        <Download size={14} /> Download Timetable PDF
-                      </a>
-                    ) : (
-                      <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                        Timetable distribution via campus noticeboard
-                      </span>
-                    )}
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      {exam.timeTableUrl && (
+                        <a
+                          href={exam.timeTableUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          download
+                          className="btn btn-outline-primary btn-sm"
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem' }}
+                        >
+                          <Download size={14} /> Timetable PDF
+                        </a>
+                      )}
+                      {exam.modelQuestionPaperUrl && (
+                        <a
+                          href={exam.modelQuestionPaperUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          download
+                          className="btn btn-gold btn-sm"
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem' }}
+                        >
+                          <Download size={14} /> Model Question Paper
+                        </a>
+                      )}
+                      {!exam.timeTableUrl && !exam.modelQuestionPaperUrl && (
+                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                          Timetable distribution via campus noticeboard
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -707,6 +722,51 @@ export const Examinations = () => {
               Official Karnataka KSEAB model question papers, blueprint schemes, and solved answer keys prepared by senior faculty members.
             </p>
           </div>
+
+          {/* Active Model Papers from Published Examinations */}
+          {examinations.some(e => e.modelQuestionPaperUrl) && (
+            <div style={{ marginBottom: '2.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--gold-700)', backgroundColor: 'var(--gold-100)', padding: '0.2rem 0.6rem', borderRadius: '4px' }}>
+                  Latest Releases
+                </span>
+                <h3 style={{ fontSize: '1.2rem', color: 'var(--primary-900)', fontWeight: 700, margin: 0 }}>
+                  Active Examination Model Question Papers & Blueprints
+                </h3>
+              </div>
+              <div className="grid-3" style={{ gap: '1.5rem', marginBottom: '1.5rem' }}>
+                {examinations.filter(e => e.modelQuestionPaperUrl).map((exam) => (
+                  <div key={`model-${exam.id}`} className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1.5px solid rgba(212, 175, 55, 0.4)', borderRadius: '12px', backgroundColor: '#fffdf5' }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#92400e', backgroundColor: '#fef3c7', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+                          {exam.stream} STREAM
+                        </span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>{exam.academicYear}</span>
+                      </div>
+                      <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--primary-900)', marginBottom: '0.4rem', lineHeight: 1.3 }}>
+                        {exam.examName} Model Paper
+                      </h4>
+                      <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+                        Official institutional question paper format and blueprint guidelines for {exam.examName}.
+                      </p>
+                    </div>
+
+                    <a
+                      href={exam.modelQuestionPaperUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      download
+                      className="btn btn-gold btn-sm"
+                      style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', width: '100%' }}
+                    >
+                      <Download size={14} /> Download Model Question Paper
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="grid-3" style={{ gap: '1.5rem' }}>
             {previousPapers.map((paper, i) => (

@@ -11,8 +11,11 @@ export const Examinations = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingExam, setEditingExam] = useState(null);
   const [uploadingPdf, setUploadingPdf] = useState(false);
+  const [uploadingModelPdf, setUploadingModelPdf] = useState(false);
 
-  const { register, handleSubmit, reset, setValue } = useForm();
+  const { register, handleSubmit, reset, setValue, watch } = useForm();
+  const watchedTimeTableUrl = watch('timeTableUrl');
+  const watchedModelQuestionPaperUrl = watch('modelQuestionPaperUrl');
 
   const handlePdfUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -28,9 +31,30 @@ export const Examinations = () => {
         setValue('timeTableUrl', res.data.url);
       }
     } catch (err) {
-      alert(err.message || 'File upload failed');
+      alert(err.message || 'Timetable upload failed');
     } finally {
       setUploadingPdf(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleModelPaperUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    setUploadingModelPdf(true);
+    try {
+      const res = await api.post('/admin/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (res.success && res.data?.url) {
+        setValue('modelQuestionPaperUrl', res.data.url);
+      }
+    } catch (err) {
+      alert(err.message || 'Model question paper upload failed');
+    } finally {
+      setUploadingModelPdf(false);
       e.target.value = '';
     }
   };
@@ -78,6 +102,7 @@ export const Examinations = () => {
       startDate: new Date().toISOString().slice(0, 10),
       endDate: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
       timeTableUrl: '/uploads/timetable-midterm-2026.pdf',
+      modelQuestionPaperUrl: '/uploads/model-paper-midterm-2026.pdf',
       instructions: '',
       published: true
     });
@@ -86,7 +111,11 @@ export const Examinations = () => {
 
   const openEditModal = (exam) => {
     setEditingExam(exam);
-    reset(exam);
+    reset({
+      ...exam,
+      timeTableUrl: exam.timeTableUrl || '',
+      modelQuestionPaperUrl: exam.modelQuestionPaperUrl || ''
+    });
     setModalOpen(true);
   };
 
@@ -164,6 +193,7 @@ export const Examinations = () => {
                 <th>Stream</th>
                 <th>Duration</th>
                 <th>Timetable File</th>
+                <th>Model Question Paper</th>
                 <th>Status</th>
                 <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
@@ -171,13 +201,13 @@ export const Examinations = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '3rem' }}>
+                  <td colSpan="8" style={{ textAlign: 'center', padding: '3rem' }}>
                     <div className="loading-spinner" style={{ margin: '0 auto' }}></div>
                   </td>
                 </tr>
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
+                  <td colSpan="8" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
                     No examinations found.
                   </td>
                 </tr>
@@ -213,10 +243,24 @@ export const Examinations = () => {
                           rel="noreferrer"
                           style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.82rem', color: 'var(--primary-700)', textDecoration: 'none' }}
                         >
-                          <FileText size={14} /> PDF File
+                          <FileText size={14} /> Timetable PDF
                         </a>
                       ) : (
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>No file</span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>No timetable</span>
+                      )}
+                    </td>
+                    <td>
+                      {exam.modelQuestionPaperUrl ? (
+                        <a
+                          href={exam.modelQuestionPaperUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.82rem', color: '#b45309', textDecoration: 'none' }}
+                        >
+                          <FileText size={14} /> Model Paper PDF
+                        </a>
+                      ) : (
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>No model paper</span>
                       )}
                     </td>
                     <td>
@@ -292,17 +336,18 @@ export const Examinations = () => {
                 </div>
               </div>
 
+              <div className="form-group">
+                <label className="form-label">Applicable Stream *</label>
+                <select className="form-select" {...register('stream', { required: true })}>
+                  <option value="ALL">All Streams (Science & Commerce)</option>
+                  <option value="SCIENCE">Science Only</option>
+                  <option value="COMMERCE">Commerce Only</option>
+                </select>
+              </div>
+
               <div className="grid-2">
                 <div className="form-group">
-                  <label className="form-label">Applicable Stream *</label>
-                  <select className="form-select" {...register('stream', { required: true })}>
-                    <option value="ALL">All Streams (Science & Commerce)</option>
-                    <option value="SCIENCE">Science Only</option>
-                    <option value="COMMERCE">Commerce Only</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Timetable PDF Document</label>
+                  <label className="form-label">Examination Timetable Document (PDF)</label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
                     <input
                       type="file"
@@ -316,10 +361,41 @@ export const Examinations = () => {
                       className="btn btn-outline-primary btn-sm"
                       style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', margin: 0, fontSize: '0.8rem' }}
                     >
-                      <Upload size={14} /> {uploadingPdf ? 'Uploading...' : 'Upload PDF Document'}
+                      <Upload size={14} /> {uploadingPdf ? 'Uploading...' : 'Upload Timetable'}
                     </label>
+                    {watchedTimeTableUrl && (
+                      <a href={watchedTimeTableUrl} target="_blank" rel="noreferrer" style={{ fontSize: '0.78rem', color: 'var(--primary-700)', textDecoration: 'underline' }}>
+                        Preview File
+                      </a>
+                    )}
                   </div>
                   <input type="text" className="form-control" placeholder="/uploads/timetable.pdf" {...register('timeTableUrl')} />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Model Question Paper Document (PDF)</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
+                    <input
+                      type="file"
+                      accept=".pdf,.doc,.docx,image/*"
+                      id="examModelPaperFileInput"
+                      style={{ display: 'none' }}
+                      onChange={handleModelPaperUpload}
+                    />
+                    <label
+                      htmlFor="examModelPaperFileInput"
+                      className="btn btn-outline-primary btn-sm"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', margin: 0, fontSize: '0.8rem' }}
+                    >
+                      <Upload size={14} /> {uploadingModelPdf ? 'Uploading...' : 'Upload Model Paper'}
+                    </label>
+                    {watchedModelQuestionPaperUrl && (
+                      <a href={watchedModelQuestionPaperUrl} target="_blank" rel="noreferrer" style={{ fontSize: '0.78rem', color: '#b45309', textDecoration: 'underline' }}>
+                        Preview File
+                      </a>
+                    )}
+                  </div>
+                  <input type="text" className="form-control" placeholder="/uploads/model-paper.pdf" {...register('modelQuestionPaperUrl')} />
                 </div>
               </div>
 

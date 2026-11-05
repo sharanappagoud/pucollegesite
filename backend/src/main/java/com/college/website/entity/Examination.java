@@ -33,6 +33,9 @@ public class Examination {
     @Column(name = "time_table_url", length = 500)
     private String timeTableUrl;
 
+    @Column(name = "model_question_paper_url", length = 500)
+    private String modelQuestionPaperUrl;
+
     @Column(columnDefinition = "TEXT")
     private String instructions;
 
@@ -60,6 +63,8 @@ public class Examination {
     public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
     public String getTimeTableUrl() { return timeTableUrl; }
     public void setTimeTableUrl(String timeTableUrl) { this.timeTableUrl = timeTableUrl; }
+    public String getModelQuestionPaperUrl() { return modelQuestionPaperUrl; }
+    public void setModelQuestionPaperUrl(String modelQuestionPaperUrl) { this.modelQuestionPaperUrl = modelQuestionPaperUrl; }
     public String getInstructions() { return instructions; }
     public void setInstructions(String instructions) { this.instructions = instructions; }
     public Boolean getPublished() { return published; }
