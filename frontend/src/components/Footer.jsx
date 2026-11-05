@@ -141,7 +141,7 @@ export const Footer = () => {
         {/* Footer Bottom Bar */}
         <div className="footer-bottom">
           <div>
-            © {new Date().getFullYear()} {collegeName}. All Rights Reserved.
+            © {new Date().getFullYear()} Sri Vidyodaya Composite Pre-University College. All Rights Reserved.
             <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '4px' }}>
               Affiliation: {settings.affiliation || 'Department of Pre-University Education, Government of Karnataka'} (Institution Code: {settings.college_code || 'KA-PUC-0842'})
             </div>

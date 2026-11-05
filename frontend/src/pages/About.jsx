@@ -21,7 +21,7 @@ export const About = () => {
             Institution Overview
           </span>
           <h1 style={{ fontSize: '2.75rem', color: '#ffffff', marginTop: '0.5rem', marginBottom: '1rem' }}>
-            About {collegeName}
+            About Sri Vidyodaya Composite Pre-University College
           </h1>
           <p style={{ maxWidth: '650px', margin: '0 auto', color: '#cbd5e1', fontSize: '1.05rem' }}>
             {settings.college_tagline || 'Inspiring academic rigor, intellectual curiosity, and ethical responsibility in Pre-University students.'}
@@ -37,10 +37,10 @@ export const About = () => {
               <span className="section-subtitle">Our Journey</span>
               <h2 className="section-title">A Legacy of Academic Brilliance</h2>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', lineHeight: '1.7' }}>
-                {collegeName} was established with a singular mission: to provide high quality, disciplined, and accessible pre-university education.
+                Sri Vidyodaya Composite Pre-University College was established with a singular mission: to provide high quality, disciplined, and accessible pre-university education.
               </p>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: '1.7' }}>
-                Recognized by the Department of Pre-University Education, Government of Karnataka, {collegeShortName} has grown from humble beginnings into a distinguished center of learning boasting state-of-the-art physics, chemistry, biology, and computer science laboratories, a digital library, and an enviable faculty roster.
+                Recognized by the Department of Pre-University Education, Government of Karnataka, Sri Vidyodaya PU College (SVCPUC) has grown from humble beginnings into a distinguished center of learning boasting state-of-the-art physics, chemistry, biology, and computer science laboratories, a digital library, and an enviable faculty roster.
               </p>
               <div style={{ display: 'flex', gap: '2rem' }}>
                 <div>
@@ -156,10 +156,10 @@ export const About = () => {
                     Pre-University education is the critical watershed of higher secondary learning in India. The decisions made during these crucial two years define future trajectories in medicine, engineering, pure research, chartered accountancy, corporate finance, and administration.
                   </p>
                   <p style={{ marginBottom: '1rem' }}>
-                    At {collegeName}, we have engineered an academic framework that balances the state board requirements with rigorous competitive problem solving. Our faculty members are not merely teachers; they are empathetic mentors who monitor every student's learning pace, identify strengths, and provide remedial handholding whenever required.
+                    At Sri Vidyodaya Composite Pre-University College, we have engineered an academic framework that balances the state board requirements with rigorous competitive problem solving. Our faculty members are not merely teachers; they are empathetic mentors who monitor every student's learning pace, identify strengths, and provide remedial handholding whenever required.
                   </p>
                   <p>
-                    I warmly invite you to visit our campus, interact with our teaching staff, and experience the vibrant learning atmosphere that sets {collegeShortName} apart.
+                    I warmly invite you to visit our campus, interact with our teaching staff, and experience the vibrant learning atmosphere that sets Sri Vidyodaya PU College apart.
                   </p>
                 </>
               )}
@@ -211,7 +211,7 @@ export const About = () => {
             <span className="section-subtitle">Institutional Governance</span>
             <h2 className="section-title">Board of Management & Governing Council</h2>
             <p className="section-desc">
-              Eminent academicians, visionary philanthropists, and seasoned administrators guiding {collegeShortName} towards holistic collegiate excellence.
+              Eminent academicians, visionary philanthropists, and seasoned administrators guiding Sri Vidyodaya Composite PU College towards holistic collegiate excellence.
             </p>
           </div>
 

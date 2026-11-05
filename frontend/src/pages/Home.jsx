@@ -157,10 +157,10 @@ export const Home = () => {
         <div className="container">
           <div className="grid-2" style={{ alignItems: 'center', gap: '3.5rem' }}>
             <div>
-              <span className="section-subtitle">Welcome to {collegeShortName}</span>
+              <span className="section-subtitle">Welcome to Sri Vidyodaya PU College</span>
               <h2 className="section-title">Nurturing Intellectual Excellence & Ethical Values</h2>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.25rem', fontSize: '1.05rem', lineHeight: '1.7' }}>
-                {collegeName} stands as one of Bengaluru's premier educational institutions. Established with the vision to deliver high-calibre collegiate education, we foster an environment that combines academic rigor with character building.
+                Sri Vidyodaya Composite Pre-University College stands as one of Bengaluru's premier educational institutions. Established with the vision to deliver high-calibre collegiate education, we foster an environment that combines academic rigor with character building.
               </p>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.75rem', lineHeight: '1.7' }}>
                 Our integrated curriculum prepares students not only to ace the Karnataka PU State Board examinations but also to crack highly competitive national entrance tests such as NEET, JEE Main, KCET, and CA Foundation without requiring separate external tuition.
@@ -239,9 +239,9 @@ export const Home = () => {
                   paddingLeft: '1rem',
                   marginBottom: '1.5rem'
                 }}>
-                  "{(settings?.principal_quote || "The two years of Pre-University education are the most transformative phase in a student's academic journey. At {collegeShortName}, we mentor each student to realize their fullest latent capability, fostering scientific inquiry and disciplined character.")
-                    .replace(/\{collegeShortName\}/g, collegeShortName || 'SVCPUC')
-                    .replace(/\{collegeName\}/g, collegeName || 'our institution')}"
+                  "{(settings?.principal_quote || "The two years of Pre-University education are the most transformative phase in a student's academic journey. At Sri Vidyodaya PU College, we mentor each student to realize their fullest latent capability, fostering scientific inquiry and disciplined character.")
+                    .replace(/\{collegeShortName\}/g, 'Sri Vidyodaya PU College')
+                    .replace(/\{collegeName\}/g, 'Sri Vidyodaya Composite Pre-University College')}"
                 </blockquote>
 
                 <Link
@@ -390,7 +390,7 @@ export const Home = () => {
                 Fast-Track Admissions 2026-27
               </span>
               <h2 className="section-title" style={{ color: '#ffffff' }}>
-                Begin Your Journey With {collegeName}
+                Begin Your Journey With Sri Vidyodaya Composite PU College
               </h2>
               <p style={{ color: '#cbd5e1', marginBottom: '1.75rem', lineHeight: '1.7', fontSize: '1.05rem' }}>
                 Submit this quick enquiry form to reserve your seat or request personalized academic counselling. Our admissions coordinator will reach out to you within 24 working hours.

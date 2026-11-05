@@ -47,7 +47,7 @@ export const Contact = () => {
             Get in Touch
           </span>
           <h1 style={{ fontSize: '2.75rem', color: '#ffffff', marginTop: '0.5rem', marginBottom: '1rem' }}>
-            Contact {collegeName}
+            Contact Sri Vidyodaya Composite Pre-University College
           </h1>
           <p style={{ maxWidth: '650px', margin: '0 auto', color: '#cbd5e1', fontSize: '1.05rem' }}>
             We are here to answer all your academic inquiries, admission procedures, campus tours, and transportation details.

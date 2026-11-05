@@ -26,7 +26,7 @@ const defaultSettings = {
   principal_name: 'Dr. K. S. Venkatesh',
   principal_title_line: 'M.Sc., M.Phil., Ph.D. | Principal & Professor',
   principal_photo_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-  principal_quote: 'The two years of Pre-University education are the most transformative phase in a student\'s academic journey. At {collegeShortName}, we mentor each student to realize their fullest latent capability, fostering scientific inquiry and disciplined character.',
+  principal_quote: 'The two years of Pre-University education are the most transformative phase in a student\'s academic journey. At Sri Vidyodaya PU College, we mentor each student to realize their fullest latent capability, fostering scientific inquiry and disciplined character.',
   principal_cta_text: 'Read Principal\'s Complete Message',
   principal_cta_link: '/about#principal-message',
   principal_accolade: 'Recipient of the State Best Teacher Accolade (2019)',
