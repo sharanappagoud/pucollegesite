@@ -178,14 +178,7 @@ const SITE_INDEX = [
     keywords: 'commerce teachers accountancy business studies economics statistics faculty'
   },
 
-  // 5. Facilities, 3D Tour & Labs
-  {
-    title: '3D Virtual Campus Tour & 360° Walkthrough',
-    category: 'Virtual Tour',
-    path: '/virtual-tour',
-    description: 'Immersive interactive 3D WebGL panoramic tour of physics, chemistry, AI computer labs, central library, and academic quadrangle with equipment hotspots.',
-    keywords: '3d 3d view 3d tour virtual tour 360 walk walkthrough panorama webgl virtual campus explore labs equipment'
-  },
+  // 5. Facilities & Labs
   {
     title: 'Campus Facilities & Infrastructure',
     category: 'Facilities',
@@ -299,7 +292,7 @@ const SITE_INDEX = [
 ];
 
 const POPULAR_SEARCHES = [
-  '3D Campus Tour', 'Timetable', 'Model Question Paper', 'PCMB', 'PCMC',
+  'Timetable', 'Model Question Paper', 'PCMB', 'PCMC',
   'Admissions 2026', 'Fee Structure', 'Faculty', 'Pratibha Fest', 'Scholarships'
 ];
 
@@ -789,4 +782,3 @@ export const SearchModal = ({ isOpen, onClose }) => {
 };
 
 export default SearchModal;
-

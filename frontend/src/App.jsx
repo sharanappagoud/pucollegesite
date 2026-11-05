@@ -19,7 +19,6 @@ import { Contact } from './pages/Contact';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { Terms } from './pages/Terms';
 import { Accessibility } from './pages/Accessibility';
-import { VirtualTour } from './pages/VirtualTour';
 import { NotFound } from './pages/NotFound';
 
 // Existing Admin Pages
@@ -69,7 +68,6 @@ export function App() {
         <Route path="examinations" element={<ExaminationsPage />} />
         <Route path="faculty" element={<Faculty />} />
         <Route path="facilities" element={<Facilities />} />
-        <Route path="virtual-tour" element={<VirtualTour />} />
         <Route path="gallery" element={<Gallery />} />
         <Route path="student-life" element={<StudentLife />} />
         <Route path="news" element={<News />} />
