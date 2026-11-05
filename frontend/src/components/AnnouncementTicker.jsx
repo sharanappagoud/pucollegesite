@@ -47,18 +47,28 @@ export const AnnouncementTicker = () => {
   const handleNoticeClick = (n) => {
     let url = n.documentUrl;
 
-    // Smart contextual resolution if documentUrl is missing or just '#'
-    if (!url || url === '#' || url.trim() === '') {
-      const lowerTitle = (n.title || '').toLowerCase();
-      if (
-        lowerTitle.includes('unit test') ||
-        lowerTitle.includes('exam') ||
-        lowerTitle.includes('timetable') ||
-        lowerTitle.includes('preparatory') ||
-        lowerTitle.includes('board') ||
-        lowerTitle.includes('assessment')
-      ) {
-        url = '/examinations';
+    // Smart contextual resolution if documentUrl is missing, '#' or generic '/examinations'
+    const lowerTitle = (n.title || '').toLowerCase();
+    const isExamNotice = (
+      lowerTitle.includes('unit test') ||
+      lowerTitle.includes('exam') ||
+      lowerTitle.includes('timetable') ||
+      lowerTitle.includes('preparatory') ||
+      lowerTitle.includes('board') ||
+      lowerTitle.includes('assessment')
+    );
+
+    if (!url || url === '#' || url.trim() === '' || url === '/examinations') {
+      if (lowerTitle.includes('unit test')) {
+        url = '/examinations#exam-unit-test';
+      } else if (lowerTitle.includes('mid term') || lowerTitle.includes('mid-term')) {
+        url = '/examinations#exam-mid-term';
+      } else if (lowerTitle.includes('preparatory')) {
+        url = '/examinations#exam-preparatory';
+      } else if (lowerTitle.includes('board') || lowerTitle.includes('annual')) {
+        url = '/examinations#exam-annual-board';
+      } else if (isExamNotice) {
+        url = '/examinations#timetables';
       } else if (
         lowerTitle.includes('scholarship') ||
         lowerTitle.includes('fee') ||
@@ -91,13 +101,27 @@ export const AnnouncementTicker = () => {
     if (hashIndex !== -1) {
       const path = url.substring(0, hashIndex) || '/';
       const hash = url.substring(hashIndex + 1);
-      navigate(path);
-      setTimeout(() => {
+      
+      // If already on the target page, scroll immediately
+      if (window.location.pathname === path) {
+        window.location.hash = hash;
         const el = document.getElementById(hash);
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.classList.add('exam-highlight-active');
+          setTimeout(() => el.classList.remove('exam-highlight-active'), 3500);
         }
-      }, 100);
+      } else {
+        navigate(path + '#' + hash);
+        setTimeout(() => {
+          const el = document.getElementById(hash);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('exam-highlight-active');
+            setTimeout(() => el.classList.remove('exam-highlight-active'), 3500);
+          }
+        }, 300);
+      }
     } else {
       navigate(url);
     }

@@ -55,6 +55,35 @@ export const Examinations = () => {
     fetchExaminations();
   }, []);
 
+  const getExamAnchorId = (exam) => {
+    if (exam.examType === 'UNIT_TEST') return 'exam-unit-test';
+    if (exam.examType === 'MID_TERM') return 'exam-mid-term';
+    if (exam.examType === 'PREPARATORY') return 'exam-preparatory';
+    if (exam.examType === 'ANNUAL_BOARD') return 'exam-annual-board';
+    return `exam-${exam.id}`;
+  };
+
+  // Auto-scroll and highlight target exam card if arriving from announcement ticker or anchor link
+  useEffect(() => {
+    const handleHashScroll = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const id = hash.replace('#', '');
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.classList.add('exam-highlight-active');
+          setTimeout(() => el.classList.remove('exam-highlight-active'), 3500);
+        }
+      }
+    };
+
+    if (!loading) {
+      const timer = setTimeout(handleHashScroll, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
+
   // Dynamic academic years list
   const availableYears = Array.from(
     new Set(
@@ -653,7 +682,8 @@ export const Examinations = () => {
               {filteredExams.map((exam) => (
                 <div
                   key={exam.id}
-                  className="card"
+                  id={getExamAnchorId(exam)}
+                  className="card exam-schedule-card"
                   style={{
                     padding: '1.75rem',
                     border: '1px solid var(--border-subtle)',
@@ -661,8 +691,9 @@ export const Examinations = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 14px rgba(0,0,0,0.04)'
+                    transition: 'all 0.25s ease',
+                    boxShadow: '0 4px 14px rgba(0,0,0,0.04)',
+                    scrollMarginTop: '100px'
                   }}
                   onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 24px rgba(0,0,0,0.08)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.04)'; }}
@@ -717,26 +748,25 @@ export const Examinations = () => {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: '#059669', fontWeight: 600 }}>
                         <CheckCircle2 size={14} /> Official Board Approved
                       </div>
-                      {isAuthenticated && (
-                        <Link
-                          to="/admin/examinations"
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.3rem',
-                            fontSize: '0.75rem',
-                            color: 'var(--primary-700)',
-                            backgroundColor: '#eff6ff',
-                            padding: '0.2rem 0.55rem',
-                            borderRadius: '4px',
-                            fontWeight: 600,
-                            textDecoration: 'none',
-                            border: '1px solid #bfdbfe'
-                          }}
-                        >
-                          <Edit2 size={12} /> Edit in Admin
-                        </Link>
-                      )}
+                      <Link
+                        to="/admin/examinations"
+                        title="Authorized faculty can manage examinations and upload PDFs"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.3rem',
+                          fontSize: '0.75rem',
+                          color: 'var(--primary-700)',
+                          backgroundColor: '#eff6ff',
+                          padding: '0.2rem 0.55rem',
+                          borderRadius: '4px',
+                          fontWeight: 600,
+                          textDecoration: 'none',
+                          border: '1px solid #bfdbfe'
+                        }}
+                      >
+                        <Edit2 size={12} /> {isAuthenticated ? 'Edit in Admin' : 'Admin Portal'}
+                      </Link>
                     </div>
 
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -744,10 +774,10 @@ export const Examinations = () => {
                         <a
                           href={exam.timeTableUrl}
                           target="_blank"
-                          rel="noreferrer"
-                          download
+                          rel="noopener noreferrer"
                           className="btn btn-outline-primary btn-sm"
                           style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem' }}
+                          title={`View or Download ${exam.examName} Timetable PDF`}
                         >
                           <Download size={14} /> Timetable PDF
                         </a>
@@ -756,10 +786,10 @@ export const Examinations = () => {
                         <a
                           href={exam.modelQuestionPaperUrl}
                           target="_blank"
-                          rel="noreferrer"
-                          download
+                          rel="noopener noreferrer"
                           className="btn btn-gold btn-sm"
                           style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem' }}
+                          title={`View or Download ${exam.examName} Model Question Paper PDF`}
                         >
                           <Download size={14} /> Model Question Paper
                         </a>
@@ -775,6 +805,18 @@ export const Examinations = () => {
               ))}
             </div>
           )}
+
+          <style>{`
+            .exam-highlight-active {
+              outline: 3px solid #d4af37 !important;
+              box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.25), 0 16px 36px rgba(11, 37, 69, 0.16) !important;
+              animation: examCardPulse 1.2s ease-in-out infinite alternate;
+            }
+            @keyframes examCardPulse {
+              from { transform: translateY(-3px) scale(1.005); }
+              to { transform: translateY(-3px) scale(1.018); }
+            }
+          `}</style>
         </div>
       </section>
 

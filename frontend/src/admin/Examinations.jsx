@@ -59,6 +59,29 @@ export const Examinations = () => {
     }
   };
 
+  const handleQuickUpload = async (exam, field, file) => {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const uploadRes = await api.post('/admin/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (uploadRes.success && uploadRes.data?.url) {
+        const updated = {
+          ...exam,
+          [field]: uploadRes.data.url
+        };
+        const saveRes = await api.post('/admin/examinations', updated);
+        if (saveRes.success) {
+          fetchExaminations();
+        }
+      }
+    } catch (err) {
+      alert(err.message || 'Upload failed: ' + (err.response?.data?.message || err.message));
+    }
+  };
+
   const fetchExaminations = () => {
     setLoading(true);
     api.get('/admin/examinations')
@@ -237,30 +260,70 @@ export const Examinations = () => {
                     </td>
                     <td>
                       {exam.timeTableUrl ? (
-                        <a
-                          href={exam.timeTableUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.82rem', color: 'var(--primary-700)', textDecoration: 'none' }}
-                        >
-                          <FileText size={14} /> Timetable PDF
-                        </a>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                          <a
+                            href={exam.timeTableUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.82rem', color: 'var(--primary-700)', textDecoration: 'none', fontWeight: 600 }}
+                            title="Preview Timetable"
+                          >
+                            <FileText size={14} /> Timetable PDF
+                          </a>
+                          <label title="Change / Replace Timetable PDF" style={{ cursor: 'pointer', margin: 0, color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center' }}>
+                            <Upload size={13} />
+                            <input
+                              type="file"
+                              accept=".pdf,.doc,.docx"
+                              style={{ display: 'none' }}
+                              onChange={(e) => handleQuickUpload(exam, 'timeTableUrl', e.target.files?.[0])}
+                            />
+                          </label>
+                        </div>
                       ) : (
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>No timetable</span>
+                        <label className="btn btn-outline-primary btn-sm" style={{ cursor: 'pointer', margin: 0, fontSize: '0.74rem', padding: '0.2rem 0.55rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                          <Upload size={12} /> Upload Timetable
+                          <input
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            style={{ display: 'none' }}
+                            onChange={(e) => handleQuickUpload(exam, 'timeTableUrl', e.target.files?.[0])}
+                          />
+                        </label>
                       )}
                     </td>
                     <td>
                       {exam.modelQuestionPaperUrl ? (
-                        <a
-                          href={exam.modelQuestionPaperUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.82rem', color: '#b45309', textDecoration: 'none' }}
-                        >
-                          <FileText size={14} /> Model Paper PDF
-                        </a>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                          <a
+                            href={exam.modelQuestionPaperUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.82rem', color: '#b45309', textDecoration: 'none', fontWeight: 600 }}
+                            title="Preview Model Question Paper"
+                          >
+                            <FileText size={14} /> Model Paper PDF
+                          </a>
+                          <label title="Change / Replace Model Question Paper" style={{ cursor: 'pointer', margin: 0, color: '#b45309', display: 'inline-flex', alignItems: 'center' }}>
+                            <Upload size={13} />
+                            <input
+                              type="file"
+                              accept=".pdf,.doc,.docx"
+                              style={{ display: 'none' }}
+                              onChange={(e) => handleQuickUpload(exam, 'modelQuestionPaperUrl', e.target.files?.[0])}
+                            />
+                          </label>
+                        </div>
                       ) : (
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>No model paper</span>
+                        <label className="btn btn-outline-warning btn-sm" style={{ cursor: 'pointer', margin: 0, fontSize: '0.74rem', padding: '0.2rem 0.55rem', color: '#b45309', borderColor: '#fde68a', backgroundColor: '#fffbeb', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                          <Upload size={12} /> Upload Model Paper
+                          <input
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            style={{ display: 'none' }}
+                            onChange={(e) => handleQuickUpload(exam, 'modelQuestionPaperUrl', e.target.files?.[0])}
+                          />
+                        </label>
                       )}
                     </td>
                     <td>

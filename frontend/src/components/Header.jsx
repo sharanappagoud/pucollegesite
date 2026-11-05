@@ -306,11 +306,13 @@ export const Header = () => {
                 type="button"
                 className="nav-search-btn"
                 onClick={() => setSearchModalOpen(true)}
-                title="Search anything across college (Press ⌘K or Ctrl+K)"
+                title="Search courses, exams, fees, faculty, admissions (Press ⌘K or Ctrl+K)"
                 aria-label="Search college information"
               >
-                <Search size={15} className="nav-search-icon" />
-                <span className="nav-search-label">Search...</span>
+                <div className="nav-search-left">
+                  <Search size={16} className="nav-search-icon" />
+                  <span className="nav-search-label">Search courses, exams, fees...</span>
+                </div>
                 <span className="nav-search-kbd">
                   <kbd>⌘K</kbd>
                 </span>
