@@ -307,10 +307,10 @@ export const Header = () => {
                 className="nav-search-btn"
                 onClick={() => setSearchModalOpen(true)}
                 title="Search anything across college (Press ⌘K or Ctrl+K)"
-                aria-label="Search"
+                aria-label="Search college information"
               >
-                <Search size={16} className="nav-search-icon" />
-                <span className="nav-search-label">Search anything...</span>
+                <Search size={15} className="nav-search-icon" />
+                <span className="nav-search-label">Search...</span>
                 <span className="nav-search-kbd">
                   <kbd>⌘K</kbd>
                 </span>
@@ -328,7 +328,7 @@ export const Header = () => {
                 className="mobile-toggle"
                 aria-label="Toggle navigation menu"
               >
-                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
           </nav>
