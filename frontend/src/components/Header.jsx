@@ -2,18 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { 
   Phone, Mail, MapPin, GraduationCap, Menu, X, ChevronDown, ChevronRight,
-  ExternalLink, Lock, Calendar, BookOpen, Award, Users 
+  ExternalLink, Lock, Calendar, BookOpen, Award, Users, Search 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
+import SearchModal from './SearchModal';
 
 export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileSubmenu, setMobileSubmenu] = useState(null);
   const { isAuthenticated, user } = useAuth();
   const { navbarBrandName, navbarBrandSub, navbarBrandTagline, settings } = useSettings();
   const navigate = useNavigate();
+
+  // Listen for Cmd+K / Ctrl+K keyboard shortcut to toggle sitewide search
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchModalOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Prevent background scrolling when mobile menu drawer is open
   useEffect(() => {
@@ -288,6 +302,20 @@ export const Header = () => {
 
             {/* Header Right Action Buttons */}
             <div className="navbar-actions">
+              <button
+                type="button"
+                className="nav-search-btn"
+                onClick={() => setSearchModalOpen(true)}
+                title="Search anything across college (Press ⌘K or Ctrl+K)"
+                aria-label="Search"
+              >
+                <Search size={16} className="nav-search-icon" />
+                <span className="nav-search-label">Search anything...</span>
+                <span className="nav-search-kbd">
+                  <kbd>⌘K</kbd>
+                </span>
+              </button>
+
               <Link 
                 to="/admissions#enquiry-form" 
                 className="btn btn-gold btn-sm nav-cta-btn"
@@ -308,6 +336,21 @@ export const Header = () => {
           {/* Mobile Drawer */}
           {mobileMenuOpen && (
             <div className="mobile-drawer">
+              {/* Quick Search Trigger in Mobile Drawer */}
+              <div 
+                className="mobile-search-trigger-wrap" 
+                onClick={() => {
+                  setSearchModalOpen(true);
+                  closeMobileMenu();
+                }}
+              >
+                <div className="mobile-search-trigger-box">
+                  <Search size={16} color="#0B2545" />
+                  <span className="mobile-search-trigger-text">Search courses, timetables, admissions...</span>
+                  <span className="mobile-search-trigger-badge">Search</span>
+                </div>
+              </div>
+
               <NavLink to="/" end onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
                 Home
               </NavLink>
@@ -458,6 +501,12 @@ export const Header = () => {
           <div className="mobile-drawer-backdrop" onClick={closeMobileMenu} />
         )}
       </header>
+
+      {/* Sitewide Universal Search Modal */}
+      <SearchModal 
+        isOpen={searchModalOpen} 
+        onClose={() => setSearchModalOpen(false)} 
+      />
     </>
   );
 };
