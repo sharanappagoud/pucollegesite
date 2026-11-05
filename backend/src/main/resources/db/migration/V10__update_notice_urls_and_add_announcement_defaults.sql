@@ -12,3 +12,4 @@ WHERE (document_url IS NULL OR document_url = '#' OR document_url = '')
 UPDATE notices 
 SET document_url = '/news'
 WHERE (document_url IS NULL OR document_url = '#' OR document_url = '');
+

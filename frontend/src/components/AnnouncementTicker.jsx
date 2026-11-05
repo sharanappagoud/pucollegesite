@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Bell, ChevronRight, ExternalLink, Plus, Edit } from 'lucide-react';
+import { Bell, ChevronRight, ExternalLink } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { useAuth } from '../context/AuthContext';
 
 export const AnnouncementTicker = () => {
   const [notices, setNotices] = useState([]);
-  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -138,16 +136,6 @@ export const AnnouncementTicker = () => {
 
           {/* Right Action Links */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
-            {isAuthenticated && (
-              <Link 
-                to="/admin/notices" 
-                className="ticker-admin-btn"
-                title="Admin: Click here to add or manage ticker announcements"
-              >
-                <Plus size={13} /> Add Announcement
-              </Link>
-            )}
-
             <Link 
               to="/news" 
               className="ticker-view-all"
@@ -208,26 +196,6 @@ export const AnnouncementTicker = () => {
         .ticker-item-btn:hover .ticker-link-icon {
           opacity: 1;
           transform: translate(1px, -1px);
-        }
-
-        .ticker-admin-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.3rem;
-          background-color: #0B2545;
-          color: #ffffff !important;
-          padding: 0.2rem 0.6rem;
-          border-radius: 6px;
-          font-size: 0.74rem;
-          font-weight: 700;
-          text-decoration: none;
-          box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-          transition: all 0.15s ease;
-        }
-
-        .ticker-admin-btn:hover {
-          background-color: #133E87;
-          transform: translateY(-1px);
         }
 
         .ticker-view-all {
