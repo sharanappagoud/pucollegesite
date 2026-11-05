@@ -42,7 +42,10 @@ export const Dashboard = () => {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <Link to="/admin/examinations" className="btn btn-outline-primary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 600 }}>
+            <GraduationCap size={15} /> Examinations & PDFs
+          </Link>
           <Link to="/admin/settings" className="btn btn-outline-primary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             <Settings size={15} /> Navbar Branding
           </Link>
@@ -100,6 +103,57 @@ export const Dashboard = () => {
           style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.55rem 1.25rem', fontWeight: '700' }}
         >
           <Settings size={15} /> Edit Navbar College Name →
+        </Link>
+      </div>
+
+      {/* Examination & Timetable Quick Access Banner */}
+      <div className="card" style={{
+        background: 'linear-gradient(135deg, #1e3a8a 0%, #0369a1 100%)',
+        color: '#ffffff',
+        borderRadius: '12px',
+        padding: '1.25rem 1.75rem',
+        marginBottom: '2rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '1rem',
+        boxShadow: '0 4px 15px rgba(3, 105, 161, 0.2)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{
+            width: '46px',
+            height: '46px',
+            borderRadius: '10px',
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+            border: '1.5px solid rgba(255, 255, 255, 0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#ffffff',
+            flexShrink: 0
+          }}>
+            <GraduationCap size={26} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.78rem', color: '#fde047', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Academic Assessments & Circulars
+            </div>
+            <div style={{ fontSize: '1.2rem', fontWeight: '800', color: '#ffffff' }}>
+              Examination Timetables & Model Question Papers
+            </div>
+            <div style={{ fontSize: '0.82rem', color: '#e0f2fe' }}>
+              Add and update timetables, upload model question paper PDFs, and manage exam schedules
+            </div>
+          </div>
+        </div>
+
+        <Link
+          to="/admin/examinations"
+          className="btn btn-gold btn-sm"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.6rem 1.4rem', fontWeight: '700' }}
+        >
+          <GraduationCap size={16} /> Manage Examination PDFs →
         </Link>
       </div>
 

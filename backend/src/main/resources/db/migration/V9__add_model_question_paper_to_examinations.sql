@@ -17,3 +17,4 @@ WHERE exam_type = 'ANNUAL_BOARD' AND model_question_paper_url IS NULL;
 UPDATE examinations
 SET model_question_paper_url = '/uploads/model-paper-unit1-2026.pdf'
 WHERE exam_type = 'UNIT_TEST' AND model_question_paper_url IS NULL;
+

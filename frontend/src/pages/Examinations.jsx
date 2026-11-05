@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   FileText, Calendar, Download, Search, CheckCircle2, AlertTriangle,
   HelpCircle, Phone, Mail, MapPin, Clock, Award, ShieldCheck, ChevronDown,
   ChevronRight, Lock, UserCheck, ExternalLink, Filter, GraduationCap,
-  BookOpen, Sparkles, RefreshCw, X
+  BookOpen, Sparkles, RefreshCw, X, Edit2
 } from 'lucide-react';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 export const Examinations = () => {
+  const { isAuthenticated, user } = useAuth();
   const [examinations, setExaminations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,7 +20,7 @@ export const Examinations = () => {
   const [selectedType, setSelectedType] = useState('ALL');
   const [selectedClass, setSelectedClass] = useState('ALL'); // 'ALL' | '1st PUC' | '2nd PUC'
   const [selectedStream, setSelectedStream] = useState('ALL'); // 'ALL' | 'SCIENCE' | 'COMMERCE'
-  const [selectedYear, setSelectedYear] = useState('2026-27');
+  const [selectedYear, setSelectedYear] = useState('ALL');
 
   // FAQs Accordion State
   const [openFaq, setOpenFaq] = useState(null);
@@ -52,6 +55,13 @@ export const Examinations = () => {
     fetchExaminations();
   }, []);
 
+  // Dynamic academic years list
+  const availableYears = Array.from(
+    new Set(
+      ['2026-27', '2027-28', '2025-26', ...examinations.map(e => e.academicYear)].filter(Boolean)
+    )
+  ).sort().reverse();
+
   // Filter examinations
   const filteredExams = examinations.filter(exam => {
     // Type filter
@@ -59,7 +69,7 @@ export const Examinations = () => {
     // Stream filter
     if (selectedStream !== 'ALL' && exam.stream !== 'ALL' && exam.stream !== selectedStream) return false;
     // Academic Year filter
-    if (selectedYear && exam.academicYear && exam.academicYear !== selectedYear) return false;
+    if (selectedYear !== 'ALL' && exam.academicYear && exam.academicYear !== selectedYear) return false;
     // Class filter (matches text in examName or instructions)
     if (selectedClass === '1st PUC' && !exam.examName.toLowerCase().includes('1st') && exam.examName.toLowerCase().includes('2nd')) return false;
     if (selectedClass === '2nd PUC' && !exam.examName.toLowerCase().includes('2nd') && exam.examName.toLowerCase().includes('1st')) return false;
@@ -438,6 +448,81 @@ export const Examinations = () => {
             </p>
           </div>
 
+          {/* Admin Management Quick Access Banner */}
+          {isAuthenticated ? (
+            <div style={{
+              backgroundColor: '#eff6ff',
+              border: '1.5px solid #bfdbfe',
+              borderRadius: '12px',
+              padding: '1rem 1.5rem',
+              marginBottom: '1.75rem',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              boxShadow: '0 4px 14px rgba(37, 99, 235, 0.08)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '8px',
+                  backgroundColor: '#dbeafe',
+                  color: 'var(--primary-700)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <GraduationCap size={20} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--primary-900)' }}>
+                    Admin Controls Active ({user?.username})
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                    Add or update timetables, upload model question paper PDFs, or edit schedules.
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                to="/admin/examinations"
+                className="btn btn-primary btn-sm"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', fontWeight: 700 }}
+              >
+                <Edit2 size={14} /> Open Examination Admin Portal →
+              </Link>
+            </div>
+          ) : (
+            <div style={{
+              backgroundColor: '#f8fafc',
+              border: '1px dashed #cbd5e1',
+              borderRadius: '10px',
+              padding: '0.75rem 1.25rem',
+              marginBottom: '1.5rem',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+              fontSize: '0.82rem',
+              color: 'var(--text-muted)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Lock size={14} color="var(--primary-700)" />
+                <span>Authorized faculty & examination committee staff can add and update examination PDFs.</span>
+              </div>
+              <Link
+                to="/admin/login"
+                style={{ fontWeight: 700, color: 'var(--primary-700)', textDecoration: 'none' }}
+              >
+                Staff / Admin Login →
+              </Link>
+            </div>
+          )}
+
           {/* Search & Filters Bar */}
           <div className="card" style={{ padding: '1.25rem', marginBottom: '2rem', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'center' }}>
@@ -508,8 +593,10 @@ export const Examinations = () => {
                   className="form-select"
                   style={{ fontSize: '0.86rem' }}
                 >
-                  <option value="2026-27">Academic Year 2026-27</option>
-                  <option value="2025-26">Academic Year 2025-26</option>
+                  <option value="ALL">All Academic Years</option>
+                  {availableYears.map(year => (
+                    <option key={year} value={year}>Academic Year {year}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -626,8 +713,30 @@ export const Examinations = () => {
                   </div>
 
                   <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: '#059669', fontWeight: 600 }}>
-                      <CheckCircle2 size={14} /> Official Board Approved
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: '#059669', fontWeight: 600 }}>
+                        <CheckCircle2 size={14} /> Official Board Approved
+                      </div>
+                      {isAuthenticated && (
+                        <Link
+                          to="/admin/examinations"
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.3rem',
+                            fontSize: '0.75rem',
+                            color: 'var(--primary-700)',
+                            backgroundColor: '#eff6ff',
+                            padding: '0.2rem 0.55rem',
+                            borderRadius: '4px',
+                            fontWeight: 600,
+                            textDecoration: 'none',
+                            border: '1px solid #bfdbfe'
+                          }}
+                        >
+                          <Edit2 size={12} /> Edit in Admin
+                        </Link>
+                      )}
                     </div>
 
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
