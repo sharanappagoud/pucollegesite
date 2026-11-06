@@ -11,14 +11,153 @@ import { useSettings } from '../context/SettingsContext';
 import { useAuth } from '../context/AuthContext';
 import { HeroBannerCarousel } from '../components/HeroBannerCarousel';
 
+const defaultCourses = [
+  {
+    id: 1,
+    code: 'PCMB',
+    name: 'Physics, Chemistry, Mathematics, Biology',
+    stream: 'SCIENCE',
+    duration: '2 Years',
+    description: 'The ideal combination for aspirants aiming for medicine, biotechnology, healthcare, engineering, and pure sciences. Dual-track NEET & JEE prep.',
+    feePerYear: 55000,
+    subjects: [{ subjectName: 'Physics' }, { subjectName: 'Chemistry' }, { subjectName: 'Mathematics' }, { subjectName: 'Biology' }]
+  },
+  {
+    id: 2,
+    code: 'PCMC',
+    name: 'Physics, Chemistry, Mathematics, Computer Science',
+    stream: 'SCIENCE',
+    duration: '2 Years',
+    description: 'Tailored for students targeting premier engineering institutes, data science, and modern technological careers with Python programming.',
+    feePerYear: 58000,
+    subjects: [{ subjectName: 'Physics' }, { subjectName: 'Chemistry' }, { subjectName: 'Mathematics' }, { subjectName: 'Computer Science' }]
+  },
+  {
+    id: 3,
+    code: 'CEBA',
+    name: 'Computer Science, Economics, Business Studies, Accountancy',
+    stream: 'COMMERCE',
+    duration: '2 Years',
+    description: 'Modern commerce program integrating financial fundamentals with IT and business analytical tools for banking and fintech.',
+    feePerYear: 48000,
+    subjects: [{ subjectName: 'Computer Science' }, { subjectName: 'Economics' }, { subjectName: 'Business Studies' }, { subjectName: 'Accountancy' }]
+  }
+];
+
+const defaultNews = [
+  {
+    id: 1,
+    title: 'Admissions Open for 1st PUC Academic Year 2026-27',
+    category: 'Admissions',
+    publishedAt: '2026-06-01',
+    excerpt: 'Applications are invited for Science (PCMB, PCMC) and Commerce (CEBA, MEBA) combinations. Apply online or visit campus counter.',
+    imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=300&q=80',
+    slug: 'admissions-open-2026-27'
+  },
+  {
+    id: 2,
+    title: 'State Level Science Olympiad: Outstanding Distinction for SVCPUC',
+    category: 'Achievements',
+    publishedAt: '2026-05-18',
+    excerpt: 'Our students secured 1st and 3rd ranks at the Karnataka State Level Pre-University Science Exhibition.',
+    imageUrl: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=300&q=80',
+    slug: 'science-olympiad-distinction'
+  },
+  {
+    id: 3,
+    title: 'New Modern Robotics & AI Lab Inaugurated on Campus',
+    category: 'Facilities',
+    publishedAt: '2026-04-10',
+    excerpt: 'A state-of-the-art computational laboratory with high-performance computing setups was inaugurated for student research.',
+    imageUrl: 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=300&q=80',
+    slug: 'robotics-ai-lab-inauguration'
+  }
+];
+
+const defaultEvents = [
+  {
+    id: 1,
+    title: 'First Unit Test Assessment 2026',
+    eventDate: '2026-08-01',
+    eventTime: '10:00 AM - 11:30 AM',
+    location: 'Main Examination Halls',
+    status: 'SCHEDULED'
+  },
+  {
+    id: 2,
+    title: 'Annual Science & Tech Exhibition "Vidyodaya TechFest"',
+    eventDate: '2026-09-15',
+    eventTime: '09:30 AM - 04:00 PM',
+    location: 'Campus Open Air Auditorium',
+    status: 'UPCOMING'
+  }
+];
+
+const defaultTestimonials = [
+  {
+    id: 1,
+    studentName: 'Ananya Sharma',
+    batchYear: 'Batch 2025',
+    stream: 'PCMB',
+    achievement: 'NEET AIR 482 • MBBS at BMCRI',
+    quote: 'The rigorous coaching, daily doubt-clearing sessions, and dedicated teachers at Sri Vidyodaya helped me secure a top medical seat.',
+    photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80'
+  },
+  {
+    id: 2,
+    studentName: 'Rahul Hegde',
+    batchYear: 'Batch 2025',
+    stream: 'PCMC',
+    achievement: 'KCET Rank 142 • B.Tech at RVCE',
+    quote: 'The blend of state board curriculum and KCET/JEE preparation under one roof gave me the analytical confidence to crack competitive exams.',
+    photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80'
+  },
+  {
+    id: 3,
+    studentName: 'Sneha Kulkarni',
+    batchYear: 'Batch 2025',
+    stream: 'CEBA',
+    achievement: '98.5% in 2nd PUC Board • CA Foundation Cleared',
+    quote: 'Faculty in Accountancy and Business Studies laid a rock-solid foundation that made clearing CA Foundation on my very first attempt effortless.',
+    photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80'
+  }
+];
+
+const defaultFacilities = [
+  {
+    id: 1,
+    title: 'Physics & Electronics Labs',
+    description: 'Precision optical benches, electronic circuit training kits, and board-certified apparatus.',
+    imageUrl: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    id: 2,
+    title: 'Advanced Computer & AI Lab',
+    description: 'High-speed gigabit workstations equipped with Python, C++, and database dev environments.',
+    imageUrl: 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    id: 3,
+    title: 'Central Digital Library',
+    description: 'Over 15,000 academic titles, national science journals, and digital e-resource kiosks.',
+    imageUrl: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    id: 4,
+    title: 'Sports & Wellness Complex',
+    description: 'Dedicated courts for badminton, basketball, table tennis, and yoga fitness studio.',
+    imageUrl: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80'
+  }
+];
+
 export const Home = () => {
   const { user } = useAuth();
   const { collegeName, collegeShortName, navbarBrandName, navbarBrandSub, settings } = useSettings();
-  const [courses, setCourses] = useState([]);
-  const [news, setNews] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [testimonials, setTestimonials] = useState([]);
-  const [facilities, setFacilities] = useState([]);
+  const [courses, setCourses] = useState(defaultCourses);
+  const [news, setNews] = useState(defaultNews);
+  const [events, setEvents] = useState(defaultEvents);
+  const [testimonials, setTestimonials] = useState(defaultTestimonials);
+  const [facilities, setFacilities] = useState(defaultFacilities);
   const [enquirySuccess, setEnquirySuccess] = useState(null);
   const [enquiryError, setEnquiryError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -28,27 +167,47 @@ export const Home = () => {
   useEffect(() => {
     // Fetch live courses
     api.get('/courses')
-      .then(res => res.success && setCourses(res.data))
+      .then(res => {
+        if (res.success && res.data?.length > 0) {
+          setCourses(res.data);
+        }
+      })
       .catch(() => { });
 
     // Fetch live news
     api.get('/news')
-      .then(res => res.success && setNews(res.data.slice(0, 3)))
+      .then(res => {
+        if (res.success && res.data?.length > 0) {
+          setNews(res.data.slice(0, 3));
+        }
+      })
       .catch(() => { });
 
     // Fetch upcoming events
     api.get('/events')
-      .then(res => res.success && setEvents(res.data.slice(0, 3)))
+      .then(res => {
+        if (res.success && res.data?.length > 0) {
+          setEvents(res.data.slice(0, 3));
+        }
+      })
       .catch(() => { });
 
     // Fetch testimonials
     api.get('/testimonials')
-      .then(res => res.success && setTestimonials(res.data))
+      .then(res => {
+        if (res.success && res.data?.length > 0) {
+          setTestimonials(res.data);
+        }
+      })
       .catch(() => { });
 
     // Fetch facilities
     api.get('/facilities')
-      .then(res => res.success && setFacilities(res.data.slice(0, 4)))
+      .then(res => {
+        if (res.success && res.data?.length > 0) {
+          setFacilities(res.data.slice(0, 4));
+        }
+      })
       .catch(() => { });
   }, []);
 
