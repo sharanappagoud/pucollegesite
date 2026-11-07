@@ -299,7 +299,7 @@ export const Home = () => {
       {/* Dynamic Hero Banner Owl Carousel (Admin-managed) */}
       <HeroBannerCarousel />
 
-      {/* Statistics Highlights Bar */}
+      {/* Statistics Highlights Bar (Executive Midnight Navy & Gold) */}
       <section style={{
         marginTop: '-2.75rem',
         position: 'relative',
@@ -308,51 +308,52 @@ export const Home = () => {
       }}>
         <div className="container">
           <div style={{
-            background: 'linear-gradient(135deg, #ffffff 0%, #f8faff 100%)',
+            background: 'linear-gradient(135deg, #07172c 0%, #0d274c 50%, #07172c 100%)',
             borderRadius: 'var(--radius-xl)',
-            boxShadow: '0 20px 40px -10px rgba(11, 37, 69, 0.12), 0 0 0 1px rgba(212, 175, 55, 0.22)',
+            boxShadow: '0 25px 50px -10px rgba(7, 23, 44, 0.4), 0 0 0 1.5px rgba(212, 175, 55, 0.45)',
             borderTop: '3.5px solid var(--gold-500)',
-            padding: '2.25rem 1.75rem'
+            padding: '2.25rem 1.75rem',
+            color: '#ffffff'
           }}>
             <div className="grid-4" style={{ textAlign: 'center' }}>
               <div style={{ padding: '0.5rem 1rem' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--primary-800)', fontFamily: 'var(--font-heading)' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--gold-400)', fontFamily: 'var(--font-heading)' }}>
                   98.6%
                 </div>
-                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-main)', marginTop: '0.25rem' }}>
+                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#ffffff', marginTop: '0.25rem' }}>
                   PUC Board Pass Rate
                 </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Consistent Distinction Record</div>
+                <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>Consistent Distinction Record</div>
               </div>
 
-              <div style={{ padding: '0.5rem 1rem', borderLeft: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--gold-600)', fontFamily: 'var(--font-heading)' }}>
+              <div style={{ padding: '0.5rem 1rem', borderLeft: '1px solid rgba(212, 175, 55, 0.3)' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--gold-400)', fontFamily: 'var(--font-heading)' }}>
                   25+
                 </div>
-                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-main)', marginTop: '0.25rem' }}>
+                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#ffffff', marginTop: '0.25rem' }}>
                   Years of Academic Legacy
                 </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Established in 1998</div>
+                <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>Established in 1998</div>
               </div>
 
-              <div style={{ padding: '0.5rem 1rem', borderLeft: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--primary-800)', fontFamily: 'var(--font-heading)' }}>
+              <div style={{ padding: '0.5rem 1rem', borderLeft: '1px solid rgba(212, 175, 55, 0.3)' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--gold-400)', fontFamily: 'var(--font-heading)' }}>
                   40+
                 </div>
-                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-main)', marginTop: '0.25rem' }}>
+                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#ffffff', marginTop: '0.25rem' }}>
                   State Ranks & Medals
                 </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>In KCET, NEET & State PUC</div>
+                <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>In KCET, NEET & State PUC</div>
               </div>
 
-              <div style={{ padding: '0.5rem 1rem', borderLeft: '1px solid var(--border-subtle)' }}>
-                <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--gold-600)', fontFamily: 'var(--font-heading)' }}>
+              <div style={{ padding: '0.5rem 1rem', borderLeft: '1px solid rgba(212, 175, 55, 0.3)' }}>
+                <div style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--gold-400)', fontFamily: 'var(--font-heading)' }}>
                   100%
                 </div>
-                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--text-main)', marginTop: '0.25rem' }}>
+                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#ffffff', marginTop: '0.25rem' }}>
                   Practical Lab Training
                 </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Individual Stations & Workbenches</div>
+                <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>Individual Stations & Workbenches</div>
               </div>
             </div>
           </div>
@@ -360,7 +361,7 @@ export const Home = () => {
       </section>
 
       {/* College Introduction & Principal's Message Section: Left Column = fadeInLeft | Right Principal Card = fadeInRight */}
-      <section id="welcome-intro" ref={welcomeSectionRef} className="section section-mesh">
+      <section id="welcome-intro" ref={welcomeSectionRef} className="section section-azure">
         <div className="container">
           <div className="grid-2" style={{ alignItems: 'center', gap: '3.5rem' }}>
             <div className={isWelcomeVisible ? 'animated fadeInLeft' : 'welcome-animate-left-ready'}>
@@ -393,17 +394,18 @@ export const Home = () => {
               </Link>
             </div>
 
-            {/* Principal Quote Card */}
+            {/* Principal Quote Card (Royal Midnight Navy & Gold) */}
             {settings?.principal_desk_enabled !== 'false' && (
               <div
                 id="principal-desk"
                 className={isWelcomeVisible ? 'animated fadeInRight' : 'welcome-animate-right-ready'}
                 style={{
-                  background: 'linear-gradient(135deg, #ffffff 0%, #fbfcfe 100%)',
+                  background: 'linear-gradient(145deg, #07172c 0%, #0d274c 100%)',
                   borderRadius: 'var(--radius-xl)',
                   padding: '2.5rem',
-                  boxShadow: '0 20px 40px -10px rgba(11, 37, 69, 0.08), 0 0 0 1px rgba(212, 175, 55, 0.22)',
-                  border: '1px solid var(--border-subtle)',
+                  boxShadow: '0 25px 50px -10px rgba(7, 23, 44, 0.35), 0 0 0 1.5px rgba(212, 175, 55, 0.4)',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                  color: '#ffffff',
                   position: 'relative'
                 }}
               >
@@ -433,10 +435,10 @@ export const Home = () => {
                     style={{ width: '70px', height: '70px', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--gold-500)', boxShadow: '0 2px 10px rgba(0,0,0,0.08)' }}
                   />
                   <div>
-                    <h4 style={{ fontSize: '1.15rem', color: 'var(--primary-900)', margin: '0 0 0.2rem 0' }}>
+                    <h4 style={{ fontSize: '1.15rem', color: '#ffffff', margin: '0 0 0.2rem 0', fontWeight: 700 }}>
                       {settings?.principal_name || "Dr. K. S. Venkatesh"}
                     </h4>
-                    <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: 0 }}>
+                    <p style={{ fontSize: '0.82rem', color: 'var(--gold-400)', margin: 0, fontWeight: 600 }}>
                       {settings?.principal_title_line || "M.Sc., M.Phil., Ph.D. | Principal & Professor"}
                     </p>
                   </div>
@@ -444,11 +446,12 @@ export const Home = () => {
 
                 <blockquote style={{
                   fontStyle: 'italic',
-                  color: 'var(--text-muted)',
+                  color: '#e2e8f0',
                   lineHeight: '1.7',
                   borderLeft: '3px solid var(--gold-500)',
                   paddingLeft: '1rem',
-                  marginBottom: '1.5rem'
+                  marginBottom: '1.5rem',
+                  fontSize: '0.92rem'
                 }}>
                   "{(settings?.principal_quote || "The two years of Pre-University education are the most transformative phase in a student's academic journey. At Sri Vidyodaya PU College, we mentor each student to realize their fullest latent capability, fostering scientific inquiry and disciplined character.")
                     .replace(/\{collegeShortName\}/g, 'Sri Vidyodaya PU College')
@@ -457,7 +460,7 @@ export const Home = () => {
 
                 <Link
                   to={settings?.principal_cta_link || "/about#principal-message"}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.88rem', fontWeight: '700', color: 'var(--primary-700)' }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.88rem', fontWeight: '700', color: 'var(--gold-400)' }}
                 >
                   {settings?.principal_cta_text || "Read Principal's Complete Message"} <ChevronRight size={14} />
                 </Link>
@@ -467,8 +470,8 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Courses & Combinations Section */}
-      <section className="section section-slate">
+      {/* Courses & Combinations Section (Warm Prestige Champagne & Gold) */}
+      <section className="section section-champagne">
         <div className="container">
           <div className="section-title-wrap">
             <span className="section-subtitle">Academic Offerings</span>
@@ -481,7 +484,17 @@ export const Home = () => {
           <div className="grid-3">
             {courses.length > 0 ? (
               courses.map(course => (
-                <div key={course.id} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
+                <div
+                  key={course.id}
+                  className="card"
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    background: 'linear-gradient(145deg, #ffffff 0%, #fcfbf7 100%)',
+                    border: '1.5px solid rgba(212, 175, 55, 0.35)',
+                    boxShadow: '0 8px 24px -4px rgba(148, 104, 0, 0.08)'
+                  }}
+                >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                     <span className={`badge ${course.stream === 'SCIENCE' ? 'badge-science' : 'badge-commerce'}`}>
                       {course.stream} STREAM
@@ -548,13 +561,17 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Campus Infrastructure Highlights */}
-      <section className="section section-mesh">
+      {/* Campus Infrastructure Highlights (Deep Royal Twilight Navy) */}
+      <section className="section section-dark">
         <div className="container">
-          <div className="section-title-wrap">
-            <span className="section-subtitle">World-Class Campus</span>
-            <h2 className="section-title">Infrastructure & Laboratories</h2>
-            <p className="section-desc">
+          <div className="section-title-wrap dark">
+            <span className="section-subtitle" style={{ backgroundColor: 'rgba(212, 175, 55, 0.15)', color: 'var(--gold-400)' }}>
+              World-Class Campus
+            </span>
+            <h2 className="section-title" style={{ color: '#ffffff' }}>
+              Infrastructure & Laboratories
+            </h2>
+            <p className="section-desc" style={{ color: '#cbd5e1' }}>
               State-of-the-art physics, chemistry, biology, and computer science laboratories conforming to the highest educational standards.
             </p>
           </div>
@@ -562,20 +579,31 @@ export const Home = () => {
           <div className="grid-4">
             {facilities.length > 0 ? (
               facilities.map(facility => (
-                <div key={facility.id} className="card" style={{ padding: '0', overflow: 'hidden' }}>
+                <div
+                  key={facility.id}
+                  className="card"
+                  style={{
+                    padding: '0',
+                    overflow: 'hidden',
+                    background: 'linear-gradient(145deg, #0d2547 0%, #07172c 100%)',
+                    border: '1.5px solid rgba(212, 175, 55, 0.35)',
+                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+                    color: '#ffffff'
+                  }}
+                >
                   <img
                     src={facility.imageUrl}
                     alt={facility.title}
                     style={{ width: '100%', height: '180px', objectFit: 'cover' }}
                   />
                   <div style={{ padding: '1.25rem' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: '700', color: 'var(--primary-700)', textTransform: 'uppercase' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: '700', color: 'var(--gold-400)', textTransform: 'uppercase' }}>
                       {facility.category}
                     </span>
-                    <h4 style={{ fontSize: '1.05rem', margin: '0.4rem 0', color: 'var(--primary-900)' }}>
+                    <h4 style={{ fontSize: '1.05rem', margin: '0.4rem 0', color: '#ffffff', fontWeight: 700 }}>
                       {facility.title}
                     </h4>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+                    <p style={{ fontSize: '0.85rem', color: '#cbd5e1', lineHeight: '1.5' }}>
                       {facility.description ? facility.description.substring(0, 95) + '...' : ''}
                     </p>
                   </div>
@@ -585,7 +613,7 @@ export const Home = () => {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <Link to="/facilities" className="btn btn-outline-primary">
+            <Link to="/facilities" className="btn btn-gold">
               Explore All Facilities & Laboratories <ArrowRight size={16} />
             </Link>
           </div>
@@ -628,21 +656,19 @@ export const Home = () => {
               </div>
             </div>
 
-            {/* Right Column: Online Form Container (animated fadeInRight) */}
+            {/* Right Column: Online Form Container (animated fadeInRight - Dark Royal Glass) */}
             <div
-              className={isEnquiryVisible ? 'animated fadeInRight' : 'enquiry-animate-right-ready'}
+              className={`${isEnquiryVisible ? 'animated fadeInRight' : 'enquiry-animate-right-ready'} form-card-dark`}
               style={{
-                backgroundColor: '#ffffff',
                 borderRadius: 'var(--radius-xl)',
-                padding: '2.25rem',
-                color: 'var(--text-main)',
-                boxShadow: 'var(--shadow-xl)'
+                padding: '2.5rem',
+                color: '#ffffff'
               }}
             >
-              <h3 style={{ fontSize: '1.35rem', marginBottom: '0.25rem', color: 'var(--primary-900)' }}>
+              <h3 style={{ fontSize: '1.45rem', marginBottom: '0.25rem', color: '#ffffff', fontWeight: 700 }}>
                 Online Admission Enquiry
               </h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+              <p style={{ fontSize: '0.86rem', color: 'var(--gold-300)', marginBottom: '1.5rem' }}>
                 Fill in the details below to generate an instant enquiry reference number.
               </p>
 
@@ -830,8 +856,8 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Latest News & Upcoming Events Section */}
-      <section className="section section-slate">
+      {/* Latest News & Upcoming Events Section (Cool Academic Azure Slate) */}
+      <section className="section section-azure">
         <div className="container">
           <div className="grid-2" style={{ gap: '3rem' }}>
             {/* News Column */}
@@ -848,9 +874,11 @@ export const Home = () => {
                   <div key={article.id} style={{
                     display: 'flex',
                     gap: '1rem',
-                    padding: '1rem',
+                    padding: '1.15rem',
                     borderRadius: 'var(--radius-md)',
-                    border: '1px solid var(--border-subtle)',
+                    border: '1.5px solid rgba(19, 62, 135, 0.18)',
+                    background: 'linear-gradient(145deg, #ffffff 0%, #f4f8fe 100%)',
+                    boxShadow: '0 4px 15px rgba(11, 37, 69, 0.05)',
                     transition: 'transform 0.15s ease'
                   }}>
                     <img
@@ -889,10 +917,11 @@ export const Home = () => {
                     display: 'flex',
                     gap: '1.25rem',
                     alignItems: 'center',
-                    padding: '1rem',
+                    padding: '1.15rem',
                     borderRadius: 'var(--radius-md)',
-                    border: '1px solid var(--border-subtle)',
-                    backgroundColor: 'var(--bg-page)'
+                    border: '1.5px solid rgba(19, 62, 135, 0.18)',
+                    background: 'linear-gradient(145deg, #ffffff 0%, #f4f8fe 100%)',
+                    boxShadow: '0 4px 15px rgba(11, 37, 69, 0.05)'
                   }}>
                     <div style={{
                       backgroundColor: 'var(--primary-800)',
@@ -928,8 +957,8 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Student & Alumni Testimonials */}
-      <section className="section section-ivory">
+      {/* Student & Alumni Testimonials (Warm Academic Champagne) */}
+      <section className="section section-champagne">
         <div className="container">
           <div className="section-title-wrap">
             <span className="section-subtitle">Student Testimonials</span>
@@ -938,7 +967,17 @@ export const Home = () => {
 
           <div className="grid-3">
             {testimonials.map(t => (
-              <div key={t.id} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div
+                key={t.id}
+                className="card"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  background: 'linear-gradient(145deg, #ffffff 0%, #faf6eb 100%)',
+                  border: '1.5px solid rgba(212, 175, 55, 0.35)',
+                  boxShadow: '0 10px 25px -5px rgba(184, 134, 11, 0.1)'
+                }}
+              >
                 <p style={{ fontStyle: 'italic', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '1.5rem', flexGrow: 1 }}>
                   "{t.quote}"
                 </p>
