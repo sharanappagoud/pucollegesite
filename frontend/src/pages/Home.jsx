@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Award, BookOpen, Users, Building, ArrowRight, CheckCircle2,
@@ -161,6 +161,35 @@ export const Home = () => {
   const [enquirySuccess, setEnquirySuccess] = useState(null);
   const [enquiryError, setEnquiryError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const enquirySectionRef = useRef(null);
+  const [isEnquiryVisible, setIsEnquiryVisible] = useState(false);
+
+  useEffect(() => {
+    if (!('IntersectionObserver' in window)) {
+      setIsEnquiryVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsEnquiryVisible(true);
+        }
+      },
+      { threshold: 0.12 }
+    );
+
+    const currentRef = enquirySectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
@@ -540,8 +569,12 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Quick Admission Enquiry Section */}
-      <section id="quick-enquiry" className="section section-dark">
+      {/* Quick Admission Enquiry Section - Animated fadeInLeft (only this section) */}
+      <section
+        id="quick-enquiry"
+        ref={enquirySectionRef}
+        className={`section section-dark animated fadeInLeft ${isEnquiryVisible ? 'in-view' : 'pre-animate'}`}
+      >
         <div className="container">
           <div className="grid-2" style={{ alignItems: 'center', gap: '3.5rem' }}>
             <div>

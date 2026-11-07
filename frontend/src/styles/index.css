@@ -1549,3 +1549,52 @@ a {
 .spin-animation {
   animation: spin 1s linear infinite;
 }
+
+/* ==========================================================================
+   Quick Admission Enquiry Section - Animated fadeInLeft
+   Applied strictly to this section (#quick-enquiry) only
+   ========================================================================== */
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-60px, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animated {
+  animation-duration: 0.9s;
+  animation-fill-mode: both;
+}
+
+.fadeInLeft {
+  animation-name: fadeInLeft;
+}
+
+#quick-enquiry {
+  overflow-x: hidden;
+  position: relative;
+}
+
+#quick-enquiry.pre-animate {
+  opacity: 0;
+  transform: translate3d(-60px, 0, 0);
+}
+
+#quick-enquiry.in-view {
+  animation: fadeInLeft 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #quick-enquiry.pre-animate {
+    opacity: 1;
+    transform: none;
+  }
+  #quick-enquiry.in-view {
+    animation: none;
+  }
+}
+
