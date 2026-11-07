@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Image as ImageIcon, Plus, Edit2, Trash2, X, Eye, CheckCircle2, XCircle, Copy, Check, ExternalLink, Sparkles, Palette, Upload } from 'lucide-react';
+import { Image as ImageIcon, Plus, Edit2, Trash2, X, CheckCircle2, XCircle, Copy, Check, ExternalLink, Sparkles, Upload } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import api from '../services/api';
 
+/**
+ * Admin Banner & Hero Photo Management
+ * Pure Photo Manager – all text, subtitle, and color fields removed.
+ * Gives admin full access to:
+ *  - Upload new photos
+ *  - Replace existing photos
+ *  - Edit photo order & status
+ *  - Delete / remove photos
+ */
 export const Banners = () => {
   const [activeTab, setActiveTab] = useState('banners'); // 'banners' | 'media'
   const [banners, setBanners] = useState([]);
@@ -19,6 +28,7 @@ export const Banners = () => {
   const { register: registerBanner, handleSubmit: handleBannerSubmit, reset: resetBanner, watch: watchBanner, setValue: setBannerValue } = useForm();
   const { register: registerMedia, handleSubmit: handleMediaSubmit, reset: resetMedia } = useForm();
 
+  // Upload file inside modal
   const handleBannerFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -31,6 +41,9 @@ export const Banners = () => {
       });
       if (res.success && res.data?.url) {
         setBannerValue('imageUrl', res.data.url);
+        if (!watchBanner('title')) {
+          setBannerValue('title', file.name ? file.name.replace(/\.[^/.]+$/, '') : `Campus Photo`);
+        }
       }
     } catch (err) {
       alert(err.message || 'File upload failed');
@@ -40,6 +53,7 @@ export const Banners = () => {
     }
   };
 
+  // Quick 1-click photo upload from top header
   const handleQuickAddPhoto = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -53,13 +67,18 @@ export const Banners = () => {
       if (res.success && res.data?.url) {
         const newBanner = {
           imageUrl: res.data.url,
-          title: file.name ? file.name.replace(/\.[^/.]+$/, "") : `Campus Banner ${banners.length + 1}`,
+          title: file.name ? file.name.replace(/\.[^/.]+$/, '') : `Campus Photo ${banners.length + 1}`,
+          subtitle: '',
+          titleColor: '#FFFFFF',
+          highlightText: '',
+          highlightColor: '#E6CA65',
+          subtitleColor: '#CBD5E1',
           displayOrder: banners.length + 1,
           active: true
         };
         await api.post('/admin/banners', newBanner);
         fetchBanners();
-        alert('Photo uploaded and added to Carousel successfully!');
+        alert('Photo uploaded and added to the carousel successfully!');
       }
     } catch (err) {
       alert(err.message || 'Failed to upload photo');
@@ -69,6 +88,7 @@ export const Banners = () => {
     }
   };
 
+  // Quick 1-click photo replacement on row
   const handleQuickReplacePhoto = async (banner, file) => {
     if (!file) return;
     const formData = new FormData();
@@ -84,7 +104,7 @@ export const Banners = () => {
         };
         await api.post('/admin/banners', updated);
         fetchBanners();
-        alert('Banner photo replaced successfully!');
+        alert('Carousel photo replaced successfully!');
       }
     } catch (err) {
       alert('Photo replacement failed: ' + (err.message || 'Error'));
@@ -122,13 +142,8 @@ export const Banners = () => {
   const openAddBanner = () => {
     setEditingBanner(null);
     resetBanner({
-      title: '',
-      subtitle: '',
-      titleColor: '#FFFFFF',
-      highlightText: '',
-      highlightColor: '#E6CA65',
-      subtitleColor: '#CBD5E1',
-      imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80',
+      title: `Campus Photo ${banners.length + 1}`,
+      imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=80',
       displayOrder: banners.length + 1,
       active: true
     });
@@ -138,40 +153,27 @@ export const Banners = () => {
   const openEditBanner = (b) => {
     setEditingBanner(b);
     resetBanner({
-      ...b,
-      titleColor: b?.titleColor || '#FFFFFF',
-      highlightText: b?.highlightText || '',
-      highlightColor: b?.highlightColor || '#E6CA65',
-      subtitleColor: b?.subtitleColor || '#CBD5E1'
+      title: b?.title || `Campus Photo #${b?.displayOrder || 1}`,
+      imageUrl: b?.imageUrl || '',
+      displayOrder: b?.displayOrder || 1,
+      active: b?.active ?? true
     });
     setBannerModalOpen(true);
-  };
-
-  // Helper for live preview of title with highlighted keywords and accent color
-  const renderPreviewTitle = (title, highlightText, titleColor, highlightColor) => {
-    if (!title) return <span style={{ color: titleColor || '#FFFFFF' }}>Your Slide Headline Appears Here</span>;
-    const trimmedHl = highlightText ? highlightText.trim() : '';
-    if (trimmedHl && title.includes(trimmedHl)) {
-      const parts = title.split(trimmedHl);
-      return (
-        <span style={{ color: titleColor || '#FFFFFF' }}>
-          {parts[0]}
-          <span style={{ color: highlightColor || '#E6CA65', fontWeight: '800' }}>
-            {trimmedHl}
-          </span>
-          {parts.slice(1).join(trimmedHl)}
-        </span>
-      );
-    }
-    return <span style={{ color: titleColor || '#FFFFFF' }}>{title}</span>;
   };
 
   const onBannerSubmit = async (data) => {
     try {
       const payload = {
-        ...data,
         id: editingBanner ? editingBanner.id : null,
-        displayOrder: parseInt(data.displayOrder) || 0
+        title: data.title || `Campus Photo ${data.displayOrder || banners.length + 1}`,
+        subtitle: '',
+        titleColor: '#FFFFFF',
+        highlightText: '',
+        highlightColor: '#E6CA65',
+        subtitleColor: '#CBD5E1',
+        imageUrl: data.imageUrl,
+        displayOrder: parseInt(data.displayOrder, 10) || 1,
+        active: Boolean(data.active)
       };
       const res = await api.post('/admin/banners', payload);
       if (res.success) {
@@ -179,12 +181,12 @@ export const Banners = () => {
         fetchBanners();
       }
     } catch (err) {
-      alert(err.message || 'Failed to save banner');
+      alert(err.message || 'Failed to save photo');
     }
   };
 
   const handleDeleteBanner = async (id, title) => {
-    if (window.confirm(`Delete banner "${title}"?`)) {
+    if (window.confirm(`Are you sure you want to remove this photo from the carousel?`)) {
       try {
         await api.delete(`/admin/banners/${id}`);
         fetchBanners();
@@ -199,7 +201,7 @@ export const Banners = () => {
       await api.patch(`/admin/banners/${id}/active?active=${!currentStatus}`);
       fetchBanners();
     } catch (err) {
-      alert(err.message || 'Failed to update banner status');
+      alert(err.message || 'Failed to update photo status');
     }
   };
 
@@ -234,11 +236,12 @@ export const Banners = () => {
 
   return (
     <div>
+      {/* Page Header */}
       <div className="admin-header">
         <div>
-          <h1 className="admin-header-title">Hero Banner Carousel & Photo Management</h1>
+          <h1 className="admin-header-title">Hero Carousel Photo Management</h1>
           <p className="admin-header-subtitle">
-            Manage full-screen homepage hero photographs (auto-advancing every 5 seconds). Upload, replace, and reorder campus photos.
+            Manage full-screen homepage hero photographs (auto-advancing every 5 seconds). Upload, replace, edit order, or remove photos.
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -262,7 +265,7 @@ export const Banners = () => {
               fontWeight: 700,
               boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)'
             }}
-            title="Upload a photo from your computer to add to the carousel"
+            title="Upload a photo directly from your computer"
           >
             <Upload size={16} /> {uploadingBanner ? 'Uploading...' : 'Upload New Photo'}
             <input
@@ -274,18 +277,26 @@ export const Banners = () => {
             />
           </label>
           {activeTab === 'banners' ? (
-            <button onClick={openAddBanner} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(10, 37, 64, 0.15)' }}>
-              <Plus size={18} /> Add Slide URL
+            <button
+              onClick={openAddBanner}
+              className="btn btn-primary"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(10, 37, 64, 0.15)' }}
+            >
+              <Plus size={18} /> Add Photo via URL
             </button>
           ) : (
-            <button onClick={() => { resetMedia({ title: '', imageUrl: '', description: '' }); setMediaModalOpen(true); }} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(10, 37, 64, 0.15)' }}>
+            <button
+              onClick={() => { resetMedia({ title: '', imageUrl: '', description: '' }); setMediaModalOpen(true); }}
+              className="btn btn-primary"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(10, 37, 64, 0.15)' }}
+            >
               <Plus size={18} /> Add Media Asset
             </button>
           )}
         </div>
       </div>
 
-      {/* Info Callout */}
+      {/* Info Notice */}
       <div style={{
         backgroundColor: '#f0fdf4',
         border: '1.5px solid #bbf7d0',
@@ -294,19 +305,15 @@ export const Banners = () => {
         marginBottom: '1.5rem',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '1rem',
-        flexWrap: 'wrap'
+        gap: '0.75rem'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Sparkles size={20} color="#15803d" />
-          <div>
-            <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#166534' }}>
-              Pure Photo Hero Carousel Active (5-Second Auto-Transition)
-            </div>
-            <div style={{ fontSize: '0.8rem', color: '#15803d' }}>
-              The homepage hero shows pure high-resolution photographs with NO text or color overlay, moving every 5 seconds. Click "Replace Photo" on any slide to update pictures instantly.
-            </div>
+        <Sparkles size={20} color="#15803d" />
+        <div>
+          <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#166534' }}>
+            Pure Photo Hero Carousel Active (5-Second Auto-Transition)
+          </div>
+          <div style={{ fontSize: '0.8rem', color: '#15803d' }}>
+            The homepage hero displays pure high-resolution photographs with NO text or overlay, advancing smoothly every 5 seconds. Use the controls below to upload new photos, replace images, edit order, or delete photos.
           </div>
         </div>
       </div>
@@ -318,7 +325,7 @@ export const Banners = () => {
           className={`btn ${activeTab === 'banners' ? 'btn-primary' : 'btn-outline-primary'}`}
           style={{ borderRadius: '8px', fontSize: '0.88rem', padding: '0.5rem 1.1rem' }}
         >
-          Hero Banners ({banners.length})
+          Carousel Photos ({banners.length})
         </button>
         <button
           onClick={() => setActiveTab('media')}
@@ -329,128 +336,196 @@ export const Banners = () => {
         </button>
       </div>
 
-      {/* Hero Banners View */}
+      {/* Hero Banners / Photos View */}
       {activeTab === 'banners' && (
         <div className="admin-table-card">
-          <div>
-            <table className="table">
-              <thead>
+          <table className="table">
+            <thead>
+              <tr>
+                <th style={{ width: '180px' }}>Photo Preview</th>
+                <th>Photo Source / Information</th>
+                <th style={{ width: '100px' }}>Order</th>
+                <th style={{ width: '130px' }}>Status</th>
+                <th style={{ width: '120px', textAlign: 'right' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
                 <tr>
-                  <th>Preview</th>
-                  <th>Title & Subtitle</th>
-                  <th>Order</th>
-                  <th>Status</th>
-                  <th style={{ textAlign: 'right' }}>Actions</th>
+                  <td colSpan="5" style={{ textAlign: 'center', padding: '3rem' }}>
+                    <div className="loading-spinner" style={{ margin: '0 auto' }}></div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: 'center', padding: '3rem' }}>
-                      <div className="loading-spinner" style={{ margin: '0 auto' }}></div>
-                    </td>
-                  </tr>
-                ) : banners.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-                      No hero banners registered.
-                    </td>
-                  </tr>
-                ) : (
-                  banners.map((b) => (
-                    <tr key={b.id}>
-                      <td style={{ width: '160px' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                          <img
-                            src={b.imageUrl}
-                            alt={b.title}
-                            style={{ width: '145px', height: '80px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}
-                            onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=400&q=80'; }}
-                          />
-                          <label
-                            className="btn btn-outline-primary btn-xs"
-                            style={{
-                              cursor: 'pointer',
-                              margin: 0,
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              gap: '0.35rem',
-                              fontSize: '0.73rem',
-                              padding: '0.22rem 0.5rem',
-                              borderRadius: '4px'
-                            }}
-                            title="Replace this slide's photo directly from your computer"
-                          >
-                            <Upload size={12} /> Replace Photo
-                            <input
-                              type="file"
-                              accept="image/*"
-                              style={{ display: 'none' }}
-                              onChange={(e) => handleQuickReplacePhoto(b, e.target.files?.[0])}
-                            />
-                          </label>
-                        </div>
-                      </td>
-                      <td>
-                        <div style={{ fontWeight: '600', color: b.titleColor || 'var(--primary-900)' }}>{b.title}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{b.subtitle}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.65rem', marginTop: '0.35rem', fontSize: '0.72rem' }}>
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: b.titleColor || '#FFFFFF', border: '1px solid #cbd5e1', display: 'inline-block' }}></span>
-                            Title: <code style={{ fontSize: '0.7rem' }}>{b.titleColor || '#FFFFFF'}</code>
-                          </span>
-                          {b.highlightText && (
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                              <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: b.highlightColor || '#E6CA65', border: '1px solid #cbd5e1', display: 'inline-block' }}></span>
-                              Highlight: <code style={{ fontSize: '0.7rem', color: b.highlightColor || '#E6CA65', fontWeight: 'bold' }}>{b.highlightText}</code>
-                            </span>
-                          )}
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: b.subtitleColor || '#CBD5E1', border: '1px solid #cbd5e1', display: 'inline-block' }}></span>
-                            Subtitle: <code style={{ fontSize: '0.7rem' }}>{b.subtitleColor || '#CBD5E1'}</code>
-                          </span>
-                        </div>
-                      </td>
-                      <td style={{ fontWeight: '600', color: 'var(--primary-700)' }}>#{b.displayOrder}</td>
-                      <td>
-                        <button
-                          onClick={() => toggleBannerActive(b.id, b.active)}
+              ) : banners.length === 0 ? (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
+                    No photos added yet. Click <strong>"Upload New Photo"</strong> to add campus images.
+                  </td>
+                </tr>
+              ) : (
+                banners.map((b, idx) => (
+                  <tr key={b.id || idx}>
+                    {/* Photo Preview & Quick Replace */}
+                    <td>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                        <img
+                          src={b.imageUrl}
+                          alt={b.title || `Campus Photo #${b.displayOrder}`}
                           style={{
-                            background: 'none',
-                            border: 'none',
+                            width: '160px',
+                            height: '92px',
+                            objectFit: 'cover',
+                            borderRadius: '8px',
+                            border: '1.5px solid #cbd5e1',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+                          }}
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=400&q=80';
+                          }}
+                        />
+                        <label
+                          className="btn btn-outline-primary btn-xs"
+                          style={{
                             cursor: 'pointer',
+                            margin: 0,
                             display: 'inline-flex',
                             alignItems: 'center',
+                            justifyContent: 'center',
                             gap: '0.35rem',
-                            fontSize: '0.8rem',
-                            padding: '0.25rem 0.6rem',
-                            borderRadius: '12px',
-                            fontWeight: '600',
-                            backgroundColor: b.active ? '#dcfce7' : '#fee2e2',
-                            color: b.active ? '#166534' : '#991b1b'
+                            fontSize: '0.73rem',
+                            padding: '0.24rem 0.5rem',
+                            borderRadius: '4px',
+                            fontWeight: 600
+                          }}
+                          title="Replace this slide's photo directly from your computer"
+                        >
+                          <Upload size={12} /> Replace Photo
+                          <input
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={(e) => handleQuickReplacePhoto(b, e.target.files?.[0])}
+                          />
+                        </label>
+                      </div>
+                    </td>
+
+                    {/* Photo Source / Info (Pure Photo info, no Title/Subtitle clutter) */}
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                        <span style={{
+                          backgroundColor: '#e0e7ff',
+                          color: '#3730a3',
+                          fontSize: '0.74rem',
+                          fontWeight: 700,
+                          padding: '0.2rem 0.55rem',
+                          borderRadius: '12px'
+                        }}>
+                          Slide #{b.displayOrder}
+                        </span>
+                        <span style={{
+                          backgroundColor: '#f1f5f9',
+                          color: '#475569',
+                          fontSize: '0.72rem',
+                          fontWeight: 600,
+                          padding: '0.18rem 0.5rem',
+                          borderRadius: '6px'
+                        }}>
+                          16:9 Landscape Photo
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '0.78rem',
+                          color: '#64748b',
+                          wordBreak: 'break-all',
+                          maxWidth: '480px',
+                          lineHeight: '1.35',
+                          marginTop: '0.25rem'
+                        }}
+                        title={b.imageUrl}
+                      >
+                        {b.imageUrl?.length > 70 ? `${b.imageUrl.substring(0, 70)}...` : b.imageUrl}
+                      </div>
+                    </td>
+
+                    {/* Order */}
+                    <td style={{ fontWeight: '700', fontSize: '0.95rem', color: 'var(--primary-700)' }}>
+                      #{b.displayOrder}
+                    </td>
+
+                    {/* Status */}
+                    <td>
+                      <button
+                        onClick={() => toggleBannerActive(b.id, b.active)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          fontSize: '0.8rem',
+                          padding: '0.25rem 0.65rem',
+                          borderRadius: '12px',
+                          fontWeight: '600',
+                          backgroundColor: b.active ? '#dcfce7' : '#fee2e2',
+                          color: b.active ? '#166534' : '#991b1b',
+                          transition: 'all 0.15s ease'
+                        }}
+                        title="Click to toggle Active / Inactive"
+                      >
+                        {b.active ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
+                        {b.active ? 'Active' : 'Hidden'}
+                      </button>
+                    </td>
+
+                    {/* Actions: Edit & Remove */}
+                    <td style={{ textAlign: 'right' }}>
+                      <div style={{ display: 'inline-flex', gap: '0.5rem' }}>
+                        <button
+                          onClick={() => openEditBanner(b)}
+                          className="btn-icon"
+                          title="Edit Photo Details"
+                          style={{
+                            color: 'var(--primary-700)',
+                            backgroundColor: '#f1f5f9',
+                            border: '1px solid #cbd5e1',
+                            borderRadius: '6px',
+                            padding: '0.35rem',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer'
                           }}
                         >
-                          {b.active ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
-                          {b.active ? 'Active' : 'Inactive'}
+                          <Edit2 size={16} />
                         </button>
-                      </td>
-                      <td style={{ textAlign: 'right' }}>
-                        <div style={{ display: 'inline-flex', gap: '0.5rem' }}>
-                          <button onClick={() => openEditBanner(b)} className="btn-icon" title="Edit Banner" style={{ color: 'var(--primary-700)' }}>
-                            <Edit2 size={16} />
-                          </button>
-                          <button onClick={() => handleDeleteBanner(b.id, b.title)} className="btn-icon" title="Delete Banner" style={{ color: '#ef4444' }}>
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                        <button
+                          onClick={() => handleDeleteBanner(b.id, b.title)}
+                          className="btn-icon"
+                          title="Delete / Remove Photo"
+                          style={{
+                            color: '#ef4444',
+                            backgroundColor: '#fef2f2',
+                            border: '1px solid #fecaca',
+                            borderRadius: '6px',
+                            padding: '0.35rem',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       )}
 
@@ -512,278 +587,155 @@ export const Banners = () => {
         </div>
       )}
 
-      {/* Banner Modal */}
+      {/* ── Photo Add / Edit Modal (Clean: No Title, No Subtitle, Pure Photo Controls) ── */}
       {bannerModalOpen && (
         <div className="modal-backdrop" onClick={() => setBannerModalOpen(false)}>
-          <div className="modal-content" style={{ maxWidth: '720px' }} onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setBannerModalOpen(false)} style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'none', border: 'none', cursor: 'pointer' }}>
+          <div className="modal-content" style={{ maxWidth: '640px' }} onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setBannerModalOpen(false)}
+              style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'none', border: 'none', cursor: 'pointer' }}
+            >
               <X size={20} />
             </button>
-            <h3 style={{ fontSize: '1.35rem', color: 'var(--primary-900)', marginBottom: '0.25rem' }}>
-              {editingBanner ? `Edit Carousel Slide: ${editingBanner.title}` : 'Add New Hero Carousel Slide'}
+
+            <h3 style={{ fontSize: '1.3rem', color: 'var(--primary-900)', marginBottom: '0.25rem', fontWeight: 700 }}>
+              {editingBanner ? 'Edit Carousel Photo' : 'Add New Carousel Photo'}
             </h3>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
-              Changes made here are immediately rendered in the public Homepage Owl Carousel slider.
+              Upload or link a high-resolution photo. Changes appear immediately on the homepage slider.
             </p>
 
-            {/* Live Visual Slide Preview */}
+            {/* Clean Pure Photo Preview (No Text Overlays) */}
             <div style={{
-              borderRadius: '8px',
+              borderRadius: '10px',
               overflow: 'hidden',
               marginBottom: '1.25rem',
-              background: `linear-gradient(rgba(7, 23, 44, 0.84), rgba(11, 37, 69, 0.90)), url("${watchBanner('imageUrl') || 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80'}")`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              padding: '1.5rem',
-              color: '#ffffff',
-              border: '1px solid #0b2545',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+              backgroundColor: '#0a192f',
+              height: '240px',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '2px solid #cbd5e1',
+              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.12)'
             }}>
+              <img
+                src={watchBanner('imageUrl') || 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80'}
+                alt="Slide Preview"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                onError={(e) => {
+                  e.target.src = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80';
+                }}
+              />
               <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                backgroundColor: 'rgba(212, 175, 55, 0.2)',
-                border: '1px solid rgba(212, 175, 55, 0.45)',
+                position: 'absolute',
+                bottom: '0.75rem',
+                left: '0.75rem',
+                backgroundColor: 'rgba(10, 37, 64, 0.85)',
+                color: '#fef08a',
                 padding: '0.25rem 0.65rem',
-                borderRadius: '9999px',
-                fontSize: '0.7rem',
-                fontWeight: '700',
-                color: 'var(--gold-400)',
-                marginBottom: '0.75rem',
-                textTransform: 'uppercase'
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                backdropFilter: 'blur(6px)'
               }}>
-                <Sparkles size={12} /> Admissions Open 2026-27
+                📷 Live Photo Preview
               </div>
-              <h4 style={{ fontSize: '1.3rem', fontWeight: '800', lineHeight: '1.25', marginBottom: '0.5rem' }}>
-                {renderPreviewTitle(
-                  watchBanner('title'),
-                  watchBanner('highlightText'),
-                  watchBanner('titleColor'),
-                  watchBanner('highlightColor')
-                )}
-              </h4>
-              <p style={{
-                fontSize: '0.84rem',
-                color: watchBanner('subtitleColor') || '#cbd5e1',
-                lineHeight: '1.45',
-                marginBottom: 0,
-                maxWidth: '540px'
-              }}>
-                {watchBanner('subtitle') || 'Detailed description of academic programs, entrance coaching, and campus opportunities.'}
-              </p>
             </div>
 
             <form onSubmit={handleBannerSubmit(onBannerSubmit)}>
+              {/* Image Upload & URL (Primary) */}
               <div className="form-group">
-                <label className="form-label">Slide Headline / Main Title *</label>
-                <input type="text" className="form-control" placeholder="e.g. Building Strong Foundations for Engineering, Medicine & Corporate Leadership" {...registerBanner('title', { required: true })} />
-              </div>
-
-              {/* Text Colors & Highlight Styling Section */}
-              <div style={{
-                backgroundColor: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                borderRadius: '8px',
-                padding: '1rem 1.15rem',
-                marginBottom: '1rem'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.85rem', fontWeight: '700', fontSize: '0.88rem', color: 'var(--primary-900)' }}>
-                  <Palette size={16} style={{ color: 'var(--primary-600)' }} /> Text Color & Keyword Highlight Customization
-                </div>
-
-                <div className="grid-2" style={{ gap: '0.85rem' }}>
-                  {/* Title Base Color */}
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: '600' }}>
-                      Headline Base Color
-                    </label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <input
-                        type="color"
-                        value={watchBanner('titleColor') || '#FFFFFF'}
-                        onChange={(e) => setBannerValue('titleColor', e.target.value)}
-                        style={{ width: '38px', height: '38px', padding: '2px', border: '1px solid #cbd5e1', borderRadius: '6px', cursor: 'pointer' }}
-                      />
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="#FFFFFF"
-                        style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}
-                        {...registerBanner('titleColor')}
-                      />
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.35rem' }}>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Presets:</span>
-                      {['#FFFFFF', '#F8FAFC', '#E2E8F0', '#FEF08A', '#93C5FD'].map(c => (
-                        <button
-                          key={c}
-                          type="button"
-                          onClick={() => setBannerValue('titleColor', c)}
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            backgroundColor: c,
-                            border: '1px solid #94a3b8',
-                            cursor: 'pointer'
-                          }}
-                          title={c}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Highlight Color */}
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: '600' }}>
-                      Highlight Accent Color
-                    </label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <input
-                        type="color"
-                        value={watchBanner('highlightColor') || '#E6CA65'}
-                        onChange={(e) => setBannerValue('highlightColor', e.target.value)}
-                        style={{ width: '38px', height: '38px', padding: '2px', border: '1px solid #cbd5e1', borderRadius: '6px', cursor: 'pointer' }}
-                      />
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="#E6CA65"
-                        style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}
-                        {...registerBanner('highlightColor')}
-                      />
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.35rem' }}>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Presets:</span>
-                      {['#E6CA65', '#F59E0B', '#FBBF24', '#38BDF8', '#34D399', '#F43F5E'].map(c => (
-                        <button
-                          key={c}
-                          type="button"
-                          onClick={() => setBannerValue('highlightColor', c)}
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            backgroundColor: c,
-                            border: '1px solid #94a3b8',
-                            cursor: 'pointer'
-                          }}
-                          title={c}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid-2" style={{ gap: '0.85rem', marginTop: '0.85rem' }}>
-                  {/* Highlight Phrase */}
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: '600' }}>
-                      Headline Highlight Phrase / Words
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="e.g. Engineering, Medicine & Corporate"
-                      {...registerBanner('highlightText')}
-                    />
-                    <small style={{ color: 'var(--text-muted)', fontSize: '0.72rem', display: 'block', marginTop: '0.2rem' }}>
-                      Exact phrase in headline to paint with the highlight accent color.
-                    </small>
-                  </div>
-
-                  {/* Subtitle Color */}
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" style={{ fontSize: '0.8rem', fontWeight: '600' }}>
-                      Sub-headline Text Color
-                    </label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <input
-                        type="color"
-                        value={watchBanner('subtitleColor') || '#CBD5E1'}
-                        onChange={(e) => setBannerValue('subtitleColor', e.target.value)}
-                        style={{ width: '38px', height: '38px', padding: '2px', border: '1px solid #cbd5e1', borderRadius: '6px', cursor: 'pointer' }}
-                      />
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="#CBD5E1"
-                        style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}
-                        {...registerBanner('subtitleColor')}
-                      />
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.35rem' }}>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Presets:</span>
-                      {['#CBD5E1', '#E2E8F0', '#94A3B8', '#FFFFFF', '#FEF9E7'].map(c => (
-                        <button
-                          key={c}
-                          type="button"
-                          onClick={() => setBannerValue('subtitleColor', c)}
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            backgroundColor: c,
-                            border: '1px solid #94a3b8',
-                            cursor: 'pointer'
-                          }}
-                          title={c}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Sub-headline / Description</label>
-                <textarea rows={2} className="form-control" placeholder="e.g. Rigorous Karnataka State Pre-University board education integrated with premier coaching..." {...registerBanner('subtitle')} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Background Image File or Direct URL *</label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+                <label className="form-label" style={{ fontWeight: 700, fontSize: '0.88rem' }}>
+                  Photo File or Direct Image URL *
+                </label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.6rem' }}>
                   <input
                     type="file"
                     accept="image/*"
-                    id="bannerImageFileInput"
+                    id="bannerModalFileInput"
                     style={{ display: 'none' }}
                     onChange={handleBannerFileUpload}
                   />
                   <label
-                    htmlFor="bannerImageFileInput"
+                    htmlFor="bannerModalFileInput"
                     className="btn btn-outline-primary btn-sm"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', margin: 0 }}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      cursor: 'pointer',
+                      margin: 0,
+                      fontWeight: 600,
+                      backgroundColor: '#eff6ff'
+                    }}
                   >
                     <Upload size={14} /> {uploadingBanner ? 'Uploading file...' : 'Choose File from Computer'}
                   </label>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>or enter direct URL below</span>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                    or paste direct Image URL below
+                  </span>
                 </div>
-                <input type="text" className="form-control" placeholder="https://images.unsplash.com/photo-... or /uploads/..." {...registerBanner('imageUrl', { required: true })} />
+
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="https://images.unsplash.com/... or /uploads/..."
+                  {...registerBanner('imageUrl', { required: true })}
+                />
+
                 {watchBanner('imageUrl')?.includes('photos.google.com') && (
                   <div style={{ color: '#b45309', backgroundColor: '#fef3c7', padding: '0.45rem 0.75rem', borderRadius: '6px', fontSize: '0.78rem', marginTop: '0.4rem' }}>
                     ⚠️ <strong>Google Photos Link Detected</strong>: Google Photos links cannot be embedded directly on websites. Click <strong>"Choose File from Computer"</strong> above to upload the actual image file directly!
                   </div>
                 )}
-                <small style={{ color: 'var(--text-muted)', fontSize: '0.75rem', display: 'block', marginTop: '0.25rem' }}>
-                  Use high-resolution 1920x800+ landscape images. Direct URLs or files uploaded from your computer.
+                <small style={{ color: 'var(--text-muted)', fontSize: '0.74rem', display: 'block', marginTop: '0.35rem' }}>
+                  Recommended: High-resolution landscape photo (1920x800 or 16:9 ratio).
                 </small>
               </div>
-              <div className="grid-2">
-                <div className="form-group">
-                  <label className="form-label">Display Order (1 = First Slide)</label>
-                  <input type="number" min={1} className="form-control" {...registerBanner('displayOrder')} />
+
+              {/* Order & Active Status */}
+              <div className="grid-2" style={{ gap: '1rem', marginTop: '1rem' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label" style={{ fontWeight: 600, fontSize: '0.84rem' }}>
+                    Display Order (1 = First Slide)
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    className="form-control"
+                    {...registerBanner('displayOrder')}
+                  />
                 </div>
-                <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingTop: '1.75rem' }}>
-                  <input type="checkbox" id="bannerActiveCheck" {...registerBanner('active')} />
-                  <label htmlFor="bannerActiveCheck" style={{ margin: 0, fontSize: '0.88rem', cursor: 'pointer', fontWeight: '600' }}>
-                    Active in Owl Carousel
+                <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', paddingTop: '1.65rem', marginBottom: 0 }}>
+                  <input
+                    type="checkbox"
+                    id="bannerActiveCheck"
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                    {...registerBanner('active')}
+                  />
+                  <label htmlFor="bannerActiveCheck" style={{ margin: 0, fontSize: '0.88rem', cursor: 'pointer', fontWeight: 600 }}>
+                    Active in Homepage Carousel
                   </label>
                 </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1.5rem' }}>
-                <button type="button" onClick={() => setBannerModalOpen(false)} className="btn btn-outline-primary btn-sm">Cancel</button>
-                <button type="submit" className="btn btn-primary btn-sm">Save Carousel Slide</button>
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1.75rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0' }}>
+                <button
+                  type="button"
+                  onClick={() => setBannerModalOpen(false)}
+                  className="btn btn-outline-primary btn-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-sm"
+                  style={{ fontWeight: 600, padding: '0.5rem 1.25rem' }}
+                >
+                  {editingBanner ? 'Update Photo' : 'Save Photo'}
+                </button>
               </div>
             </form>
           </div>
