@@ -301,17 +301,18 @@ export const Home = () => {
 
       {/* Statistics Highlights Bar */}
       <section style={{
-        marginTop: '-2.5rem',
+        marginTop: '-2.75rem',
         position: 'relative',
-        zIndex: 10
+        zIndex: 10,
+        padding: 0
       }}>
         <div className="container">
           <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: 'var(--radius-lg)',
-            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-            border: '1px solid var(--border-subtle)',
-            padding: '2rem 1.5rem'
+            background: 'linear-gradient(135deg, #ffffff 0%, #f8faff 100%)',
+            borderRadius: 'var(--radius-xl)',
+            boxShadow: '0 20px 40px -10px rgba(11, 37, 69, 0.12), 0 0 0 1px rgba(212, 175, 55, 0.22)',
+            borderTop: '3.5px solid var(--gold-500)',
+            padding: '2.25rem 1.75rem'
           }}>
             <div className="grid-4" style={{ textAlign: 'center' }}>
               <div style={{ padding: '0.5rem 1rem' }}>
@@ -359,7 +360,7 @@ export const Home = () => {
       </section>
 
       {/* College Introduction & Principal's Message Section: Left Column = fadeInLeft | Right Principal Card = fadeInRight */}
-      <section id="welcome-intro" ref={welcomeSectionRef} className="section">
+      <section id="welcome-intro" ref={welcomeSectionRef} className="section section-mesh">
         <div className="container">
           <div className="grid-2" style={{ alignItems: 'center', gap: '3.5rem' }}>
             <div className={isWelcomeVisible ? 'animated fadeInLeft' : 'welcome-animate-left-ready'}>
@@ -398,10 +399,10 @@ export const Home = () => {
                 id="principal-desk"
                 className={isWelcomeVisible ? 'animated fadeInRight' : 'welcome-animate-right-ready'}
                 style={{
-                  backgroundColor: '#ffffff',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #fbfcfe 100%)',
                   borderRadius: 'var(--radius-xl)',
                   padding: '2.5rem',
-                  boxShadow: 'var(--shadow-xl)',
+                  boxShadow: '0 20px 40px -10px rgba(11, 37, 69, 0.08), 0 0 0 1px rgba(212, 175, 55, 0.22)',
                   border: '1px solid var(--border-subtle)',
                   position: 'relative'
                 }}
@@ -467,7 +468,7 @@ export const Home = () => {
       </section>
 
       {/* Courses & Combinations Section */}
-      <section className="section" style={{ backgroundColor: '#ffffff', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
+      <section className="section section-slate">
         <div className="container">
           <div className="section-title-wrap">
             <span className="section-subtitle">Academic Offerings</span>
@@ -548,7 +549,7 @@ export const Home = () => {
       </section>
 
       {/* Campus Infrastructure Highlights */}
-      <section className="section">
+      <section className="section section-mesh">
         <div className="container">
           <div className="section-title-wrap">
             <span className="section-subtitle">World-Class Campus</span>
@@ -830,7 +831,7 @@ export const Home = () => {
       </section>
 
       {/* Latest News & Upcoming Events Section */}
-      <section className="section" style={{ backgroundColor: '#ffffff' }}>
+      <section className="section section-slate">
         <div className="container">
           <div className="grid-2" style={{ gap: '3rem' }}>
             {/* News Column */}
@@ -928,7 +929,7 @@ export const Home = () => {
       </section>
 
       {/* Student & Alumni Testimonials */}
-      <section className="section" style={{ backgroundColor: 'var(--bg-page)' }}>
+      <section className="section section-ivory">
         <div className="container">
           <div className="section-title-wrap">
             <span className="section-subtitle">Student Testimonials</span>
