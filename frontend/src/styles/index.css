@@ -1591,26 +1591,30 @@ a {
   animation-name: fadeInRight;
 }
 
-#quick-enquiry {
+#quick-enquiry,
+#welcome-intro {
   overflow-x: hidden;
   position: relative;
 }
 
 /* Initial pre-animation states (waiting for scroll into viewport) */
-.enquiry-animate-left-ready {
+.enquiry-animate-left-ready,
+.welcome-animate-left-ready {
   opacity: 0;
   transform: translate3d(-75px, 0, 0);
   visibility: hidden;
 }
 
-.enquiry-animate-right-ready {
+.enquiry-animate-right-ready,
+.welcome-animate-right-ready {
   opacity: 0;
   transform: translate3d(75px, 0, 0);
   visibility: hidden;
 }
 
 /* Active animation trigger states */
-#quick-enquiry .animated.fadeInLeft {
+#quick-enquiry .animated.fadeInLeft,
+#welcome-intro .animated.fadeInLeft {
   visibility: visible;
   animation-name: fadeInLeft;
   animation-duration: 0.95s;
@@ -1618,7 +1622,8 @@ a {
   animation-fill-mode: both;
 }
 
-#quick-enquiry .animated.fadeInRight {
+#quick-enquiry .animated.fadeInRight,
+#welcome-intro .animated.fadeInRight {
   visibility: visible;
   animation-name: fadeInRight;
   animation-duration: 0.95s;
@@ -1628,13 +1633,17 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .enquiry-animate-left-ready,
-  .enquiry-animate-right-ready {
+  .enquiry-animate-right-ready,
+  .welcome-animate-left-ready,
+  .welcome-animate-right-ready {
     opacity: 1 !important;
     transform: none !important;
     visibility: visible !important;
   }
   #quick-enquiry .animated.fadeInLeft,
-  #quick-enquiry .animated.fadeInRight {
+  #quick-enquiry .animated.fadeInRight,
+  #welcome-intro .animated.fadeInLeft,
+  #welcome-intro .animated.fadeInRight {
     animation: none !important;
   }
 }

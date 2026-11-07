@@ -163,21 +163,32 @@ export const Home = () => {
   const [submitting, setSubmitting] = useState(false);
   const enquirySectionRef = useRef(null);
   const [isEnquiryVisible, setIsEnquiryVisible] = useState(false);
+  const welcomeSectionRef = useRef(null);
+  const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
 
   useEffect(() => {
     if (!('IntersectionObserver' in window)) {
       setIsEnquiryVisible(true);
+      setIsWelcomeVisible(true);
       return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsEnquiryVisible(true);
-          } else if (entry.boundingClientRect.top > 0) {
-            // When user scrolls back up above the section, reset so it re-animates smoothly when scrolling down
-            setIsEnquiryVisible(false);
+          if (entry.target === enquirySectionRef.current) {
+            if (entry.isIntersecting) {
+              setIsEnquiryVisible(true);
+            } else if (entry.boundingClientRect.top > 0) {
+              setIsEnquiryVisible(false);
+            }
+          }
+          if (entry.target === welcomeSectionRef.current) {
+            if (entry.isIntersecting) {
+              setIsWelcomeVisible(true);
+            } else if (entry.boundingClientRect.top > 0) {
+              setIsWelcomeVisible(false);
+            }
           }
         });
       },
@@ -187,15 +198,14 @@ export const Home = () => {
       }
     );
 
-    const currentRef = enquirySectionRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
+    const enquiryEl = enquirySectionRef.current;
+    const welcomeEl = welcomeSectionRef.current;
+    if (enquiryEl) observer.observe(enquiryEl);
+    if (welcomeEl) observer.observe(welcomeEl);
 
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
+      if (enquiryEl) observer.unobserve(enquiryEl);
+      if (welcomeEl) observer.unobserve(welcomeEl);
     };
   }, []);
 
@@ -348,11 +358,11 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* College Introduction & Principal's Message Section */}
-      <section className="section">
+      {/* College Introduction & Principal's Message Section: Left Column = fadeInLeft | Right Principal Card = fadeInRight */}
+      <section id="welcome-intro" ref={welcomeSectionRef} className="section">
         <div className="container">
           <div className="grid-2" style={{ alignItems: 'center', gap: '3.5rem' }}>
-            <div>
+            <div className={isWelcomeVisible ? 'animated fadeInLeft' : 'welcome-animate-left-ready'}>
               <span className="section-subtitle">Welcome to Sri Vidyodaya PU College</span>
               <h2 className="section-title">Nurturing Intellectual Excellence & Ethical Values</h2>
               <p style={{ color: 'var(--text-muted)', marginBottom: '1.25rem', fontSize: '1.05rem', lineHeight: '1.7' }}>
@@ -384,14 +394,18 @@ export const Home = () => {
 
             {/* Principal Quote Card */}
             {settings?.principal_desk_enabled !== 'false' && (
-              <div id="principal-desk" style={{
-                backgroundColor: '#ffffff',
-                borderRadius: 'var(--radius-xl)',
-                padding: '2.5rem',
-                boxShadow: 'var(--shadow-xl)',
-                border: '1px solid var(--border-subtle)',
-                position: 'relative'
-              }}>
+              <div
+                id="principal-desk"
+                className={isWelcomeVisible ? 'animated fadeInRight' : 'welcome-animate-right-ready'}
+                style={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: 'var(--radius-xl)',
+                  padding: '2.5rem',
+                  boxShadow: 'var(--shadow-xl)',
+                  border: '1px solid var(--border-subtle)',
+                  position: 'relative'
+                }}
+              >
                 <div style={{
                   position: 'absolute',
                   top: '-15px',
