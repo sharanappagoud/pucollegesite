@@ -1,125 +1,84 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Camera, Upload, Edit2, Plus, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
-import { useSettings } from '../context/SettingsContext';
+import { useAuth } from '../context/AuthContext';
 
 /**
- * HeroBannerCarousel – Professional Owl Carousel slider for the Hero Section
- * Fully responsive with auto-play, pause on hover, touch/drag swipe,
- * animated transitions, pagination dots, and navigation arrows.
- * Fetches active slides dynamically from /api/v1/banners (managed by Admin).
+ * HeroBannerCarousel – Pure Image Slider (No Text, No Dark Color Overlays)
+ * Auto-advances every 5 seconds with smooth cross-fade transition.
+ * Provides direct access for Admin to change, upload, and manage carousel photos.
  */
 export const HeroBannerCarousel = () => {
-  const { collegeName } = useSettings();
+  const { user, token } = useAuth();
+  const isAuthenticated = Boolean(token && user);
+
   const [banners, setBanners] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStartX, setTouchStartX] = useState(0);
+  const [uploadingQuick, setUploadingQuick] = useState(false);
   const timerRef = useRef(null);
 
-  // Default fallback slides if none fetched from API
+  // Default curated high-resolution campus photos if none stored in database
   const defaultSlides = [
     {
       id: 'default-1',
-      title: 'Building Strong Foundations for Engineering, Medicine & Corporate Leadership',
-      subtitle: `${collegeName || 'Sri Vidyodaya Composite Pre-University College'} provides rigorous Karnataka State Pre-University board education integrated with premier coaching for KCET, NEET, JEE, and CA Foundation.`,
-      titleColor: '#FFFFFF',
-      highlightText: 'Engineering, Medicine & Corporate',
-      highlightColor: '#E6CA65',
-      subtitleColor: '#CBD5E1',
-      imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=80',
-      ctaText: 'Apply For Admission',
-      ctaLink: '/admissions',
-      secondaryText: 'Explore Courses & Streams',
-      secondaryLink: '/academics',
-      tertiaryText: 'Enquire Now',
-      tertiaryLink: '#quick-enquiry'
+      imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=85',
+      title: 'Sri Vidyodaya College Main Campus Block'
     },
     {
       id: 'default-2',
-      title: 'Integrated Coaching for KCET, NEET, JEE & CA Foundation',
-      subtitle: 'State-of-the-art laboratory workshops, distinguished senior faculties, and weekly chapter-wise mock tests ensuring 98.6% distinction rate.',
-      titleColor: '#FFFFFF',
-      highlightText: 'KCET, NEET, JEE & CA Foundation',
-      highlightColor: '#E6CA65',
-      subtitleColor: '#CBD5E1',
-      imageUrl: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1920&q=80',
-      ctaText: 'Explore Science Stream',
-      ctaLink: '/academics',
-      secondaryText: 'Apply For Admission',
-      secondaryLink: '/admissions',
-      tertiaryText: 'Enquire Now',
-      tertiaryLink: '#quick-enquiry'
+      imageUrl: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1920&q=85',
+      title: 'Academic Grounds & Library Building'
     },
     {
       id: 'default-3',
-      title: 'Excellence in Science & Commerce Streams with Modern Infrastructure',
-      subtitle: 'Nurturing student potential with advanced computing labs, expansive library study corridors, sports arenas, and holistic student development.',
-      titleColor: '#FFFFFF',
-      highlightText: 'Science & Commerce Streams',
-      highlightColor: '#E6CA65',
-      subtitleColor: '#CBD5E1',
-      imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1920&q=80',
-      ctaText: 'Explore Commerce Stream',
-      ctaLink: '/academics',
-      secondaryText: 'Campus Facilities',
-      secondaryLink: '/facilities',
-      tertiaryText: 'Enquire Now',
-      tertiaryLink: '#quick-enquiry'
+      imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1920&q=85',
+      title: 'Collegiate Learning & Research Labs'
     }
   ];
 
   // Fetch active banners from backend
-  useEffect(() => {
-    let isMounted = true;
+  const fetchBanners = () => {
     api.get('/banners')
       .then((res) => {
-        if (!isMounted) return;
         if (res.success && Array.isArray(res.data) && res.data.length > 0) {
-          // Normalize slides with fallback links
-          const mapped = res.data.map((b) => ({
-            id: b.id,
-            title: b.title || 'Excellence in Collegiate Education',
-            subtitle: b.subtitle || 'Empowering students with knowledge, character, and leadership.',
-            titleColor: b.titleColor || '#FFFFFF',
-            highlightText: b.highlightText || '',
-            highlightColor: b.highlightColor || '#E6CA65',
-            subtitleColor: b.subtitleColor || '#CBD5E1',
-            imageUrl: (b.imageUrl && !b.imageUrl.includes('photos.google.com/photo/'))
-              ? b.imageUrl
-              : 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=80',
-            ctaText: b.ctaText || 'Apply For Admission',
-            ctaLink: b.ctaLink || '/admissions',
-            secondaryText: 'Explore Courses & Streams',
-            secondaryLink: '/academics',
-            tertiaryText: 'Enquire Now',
-            tertiaryLink: '#quick-enquiry'
-          }));
-          setBanners(mapped);
+          const mapped = res.data
+            .filter(b => b.imageUrl && !b.imageUrl.includes('photos.google.com/photo/'))
+            .map((b) => ({
+              id: b.id,
+              imageUrl: b.imageUrl,
+              title: b.title || 'Campus Photo'
+            }));
+          setBanners(mapped.length > 0 ? mapped : defaultSlides);
         } else {
           setBanners(defaultSlides);
         }
       })
       .catch(() => {
-        if (isMounted) setBanners(defaultSlides);
+        setBanners(defaultSlides);
       })
       .finally(() => {
-        if (isMounted) setLoading(false);
+        setLoading(false);
       });
+  };
 
-    return () => { isMounted = false; };
-  }, [collegeName]);
+  useEffect(() => {
+    fetchBanners();
+  }, []);
 
   const activeSlides = banners.length > 0 ? banners : defaultSlides;
   const totalSlides = activeSlides.length;
 
-  // Auto-play timer (advances every 5.5 seconds)
+  // Auto-play timer: moves to next image every 5 seconds (5000ms)
   useEffect(() => {
     if (isPaused || totalSlides <= 1) return;
+
     timerRef.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % totalSlides);
-    }, 5500);
+    }, 5000);
 
     return () => clearInterval(timerRef.current);
   }, [isPaused, totalSlides]);
@@ -149,39 +108,38 @@ export const HeroBannerCarousel = () => {
     }
   };
 
-  // Helper to format title with customizable accent highlight words
-  const formatTitle = (slide) => {
-    if (!slide || !slide.title) return null;
-    const titleStr = slide.title;
-    const highlightWord = slide.highlightText && slide.highlightText.trim();
-    const hlColor = slide.highlightColor || 'var(--gold-400)';
+  // Direct quick photo upload for Admin right on the carousel
+  const handleQuickPhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    if (highlightWord && titleStr.includes(highlightWord)) {
-      const parts = titleStr.split(highlightWord);
-      return (
-        <>
-          {parts[0]}
-          <span style={{ color: hlColor }}>{highlightWord}</span>
-          {parts.slice(1).join(highlightWord)}
-        </>
-      );
-    }
+    const formData = new FormData();
+    formData.append('file', file);
+    setUploadingQuick(true);
 
-    // Fallback common key terms in gold if present
-    const keywords = ['Engineering, Medicine & Corporate', 'Science & Commerce', 'KCET, NEET, JEE', 'Distinction', 'Academic Distinction'];
-    for (const kw of keywords) {
-      if (titleStr.includes(kw)) {
-        const parts = titleStr.split(kw);
-        return (
-          <>
-            {parts[0]}
-            <span style={{ color: hlColor }}>{kw}</span>
-            {parts[1]}
-          </>
-        );
+    try {
+      const uploadRes = await api.post('/admin/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      if (uploadRes.success && uploadRes.data?.url) {
+        const newBanner = {
+          imageUrl: uploadRes.data.url,
+          title: file.name ? file.name.replace(/\.[^/.]+$/, "") : 'Campus Banner',
+          displayOrder: activeSlides.length + 1,
+          active: true
+        };
+        await api.post('/admin/banners', newBanner);
+        fetchBanners();
+        setCurrentSlide(activeSlides.length);
+        alert('New photo uploaded and added to the carousel successfully!');
       }
+    } catch (err) {
+      alert('Photo upload failed: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setUploadingQuick(false);
+      e.target.value = '';
     }
-    return titleStr;
   };
 
   return (
@@ -190,17 +148,19 @@ export const HeroBannerCarousel = () => {
       style={{
         position: 'relative',
         width: '100%',
-        minHeight: '620px',
+        height: 'clamp(420px, 52vw, 620px)',
+        minHeight: '420px',
+        maxHeight: '640px',
         overflow: 'hidden',
-        backgroundColor: '#07172c',
-        color: '#ffffff'
+        backgroundColor: '#0a192f'
       }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      aria-label="Campus Hero Image Gallery"
     >
-      {/* Slides Container */}
+      {/* ── Slide Images (Clean pure photos with NO color overlay and NO text) ── */}
       {activeSlides.map((slide, index) => {
         const isActive = index === currentSlide;
         return (
@@ -212,79 +172,148 @@ export const HeroBannerCarousel = () => {
               inset: 0,
               opacity: isActive ? 1 : 0,
               visibility: isActive ? 'visible' : 'hidden',
-              transition: 'opacity 0.8s ease-in-out, transform 0.8s ease-in-out',
-              transform: isActive ? 'scale(1)' : 'scale(1.04)',
-              background: `linear-gradient(rgba(7, 23, 44, 0.84), rgba(11, 37, 69, 0.90)), url("${slide.imageUrl}")`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              display: 'flex',
-              alignItems: 'center',
-              padding: '6rem 0 7.5rem 0',
-              zIndex: isActive ? 1 : 0
+              transition: 'opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: isActive ? 'scale(1)' : 'scale(1.03)',
+              zIndex: isActive ? 1 : 0,
+              overflow: 'hidden'
             }}
           >
-            <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-              <div style={{ maxWidth: '840px', padding: '0 0.5rem' }}>
-
-                {/* Admissions Badge */}
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    backgroundColor: 'rgba(212, 175, 55, 0.18)',
-                    border: '1px solid rgba(212, 175, 55, 0.55)',
-                    padding: '0.45rem 1.15rem',
-                    borderRadius: '9999px',
-                    fontSize: '0.82rem',
-                    fontWeight: '700',
-                    color: 'var(--gold-400)',
-                    marginBottom: '1.5rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    backdropFilter: 'blur(6px)',
-                    animation: isActive ? 'heroSlideUp 0.6s ease forwards' : 'none'
-                  }}
-                >
-                  <Sparkles size={16} /> Admissions Open For Academic Year 2026-27
-                </div>
-
-                {/* Hero Title */}
-                <h1
-                  style={{
-                    fontSize: 'clamp(2.1rem, 4.2vw, 3.35rem)',
-                    fontWeight: '800',
-                    color: slide.titleColor || '#ffffff',
-                    letterSpacing: '-0.025em',
-                    lineHeight: '1.18',
-                    marginBottom: '1.5rem',
-                    animation: isActive ? 'heroSlideUp 0.8s ease forwards' : 'none'
-                  }}
-                >
-                  {formatTitle(slide)}
-                </h1>
-
-                {/* Hero Subtitle */}
-                <p
-                  style={{
-                    fontSize: 'clamp(1rem, 1.4vw, 1.2rem)',
-                    color: slide.subtitleColor || '#cbd5e1',
-                    lineHeight: '1.7',
-                    marginBottom: '0',
-                    maxWidth: '740px',
-                    animation: isActive ? 'heroSlideUp 1s ease forwards' : 'none'
-                  }}
-                >
-                  {slide.subtitle}
-                </p>
-
-              </div>
-            </div>
+            <img
+              src={slide.imageUrl}
+              alt={slide.title || `Campus View ${index + 1}`}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center',
+                display: 'block'
+              }}
+              onError={(e) => {
+                e.currentTarget.src = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1920&q=85';
+              }}
+            />
           </div>
         );
       })}
 
-      {/* Navigation Arrows (Owl Carousel style) */}
+      {/* ── Direct Admin Access for Changing Photos ────────────────────────── */}
+      {isAuthenticated ? (
+        <div
+          className="hero-admin-floating-bar"
+          style={{
+            position: 'absolute',
+            top: '1.25rem',
+            right: '1.25rem',
+            zIndex: 25,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.55rem',
+            backgroundColor: 'rgba(10, 37, 64, 0.88)',
+            border: '1.5px solid #d4af37',
+            padding: '0.4rem 0.85rem',
+            borderRadius: '30px',
+            backdropFilter: 'blur(10px)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          <span
+            style={{
+              fontSize: '0.76rem',
+              fontWeight: 700,
+              color: '#fef08a',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              paddingRight: '0.25rem',
+              borderRight: '1px solid rgba(255, 255, 255, 0.2)'
+            }}
+          >
+            <Camera size={14} /> Photo {currentSlide + 1} of {totalSlides}
+          </span>
+
+          {/* Quick upload input */}
+          <label
+            style={{
+              cursor: 'pointer',
+              margin: 0,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontSize: '0.76rem',
+              fontWeight: 700,
+              color: '#07172c',
+              backgroundColor: '#d4af37',
+              padding: '0.32rem 0.75rem',
+              borderRadius: '20px',
+              transition: 'all 0.15s ease',
+              boxShadow: '0 2px 8px rgba(212, 175, 55, 0.35)'
+            }}
+            title="Upload a photo from your computer to add to the carousel"
+          >
+            <Upload size={13} /> {uploadingQuick ? 'Uploading...' : '+ Add Photo'}
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleQuickPhotoUpload}
+              disabled={uploadingQuick}
+            />
+          </label>
+
+          {/* Manage Photos link to Admin Portal */}
+          <Link
+            to="/admin/banners"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontSize: '0.76rem',
+              fontWeight: 600,
+              color: '#ffffff',
+              backgroundColor: 'rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(255, 255, 255, 0.35)',
+              padding: '0.32rem 0.75rem',
+              borderRadius: '20px',
+              textDecoration: 'none',
+              transition: 'all 0.15s ease'
+            }}
+            title="Open Admin Banner Manager to reorder, replace, or delete photos"
+          >
+            <Edit2 size={12} /> Manage Photos
+          </Link>
+        </div>
+      ) : (
+        <Link
+          to="/admin/banners"
+          className="hero-admin-subtle-btn"
+          style={{
+            position: 'absolute',
+            top: '1.25rem',
+            right: '1.25rem',
+            zIndex: 20,
+            backgroundColor: 'rgba(7, 23, 44, 0.65)',
+            color: '#f8fafc',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
+            padding: '0.4rem 0.85rem',
+            borderRadius: '25px',
+            fontSize: '0.76rem',
+            fontWeight: 600,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            backdropFilter: 'blur(8px)',
+            textDecoration: 'none',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
+            transition: 'all 0.2s ease'
+          }}
+          title="Staff / Admin: Click to login and manage carousel photos"
+        >
+          <Camera size={13} color="#d4af37" /> Change Photos
+        </Link>
+      )}
+
+      {/* ── Navigation Arrows (Left / Right) ─────────────────────────────────── */}
       {totalSlides > 1 && (
         <>
           <button
@@ -293,32 +322,32 @@ export const HeroBannerCarousel = () => {
             className="hero-nav-arrow hero-nav-prev"
             style={{
               position: 'absolute',
-              left: '1.5rem',
+              left: '1.25rem',
               top: '50%',
               transform: 'translateY(-50%)',
-              zIndex: 10,
+              zIndex: 15,
               width: '46px',
               height: '46px',
               borderRadius: '50%',
-              backgroundColor: 'rgba(7, 23, 44, 0.75)',
-              border: '1.5px solid rgba(212, 175, 55, 0.6)',
-              color: 'var(--gold-400)',
+              backgroundColor: 'rgba(7, 23, 44, 0.65)',
+              border: '1.5px solid rgba(212, 175, 55, 0.75)',
+              color: '#d4af37',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              backdropFilter: 'blur(6px)',
-              transition: 'all 0.12s ease',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)'
+              backdropFilter: 'blur(8px)',
+              transition: 'all 0.18s ease',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.35)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--gold-500)';
-              e.currentTarget.style.color = '#07172C';
-              e.currentTarget.style.transform = 'translateY(-50%) scale(1.08)';
+              e.currentTarget.style.backgroundColor = '#d4af37';
+              e.currentTarget.style.color = '#07172c';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(7, 23, 44, 0.75)';
-              e.currentTarget.style.color = 'var(--gold-400)';
+              e.currentTarget.style.backgroundColor = 'rgba(7, 23, 44, 0.65)';
+              e.currentTarget.style.color = '#d4af37';
               e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
             }}
           >
@@ -331,32 +360,32 @@ export const HeroBannerCarousel = () => {
             className="hero-nav-arrow hero-nav-next"
             style={{
               position: 'absolute',
-              right: '1.5rem',
+              right: '1.25rem',
               top: '50%',
               transform: 'translateY(-50%)',
-              zIndex: 10,
+              zIndex: 15,
               width: '46px',
               height: '46px',
               borderRadius: '50%',
-              backgroundColor: 'rgba(7, 23, 44, 0.75)',
-              border: '1.5px solid rgba(212, 175, 55, 0.6)',
-              color: 'var(--gold-400)',
+              backgroundColor: 'rgba(7, 23, 44, 0.65)',
+              border: '1.5px solid rgba(212, 175, 55, 0.75)',
+              color: '#d4af37',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              backdropFilter: 'blur(6px)',
-              transition: 'all 0.25s ease',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)'
+              backdropFilter: 'blur(8px)',
+              transition: 'all 0.18s ease',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.35)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--gold-500)';
-              e.currentTarget.style.color = '#07172C';
-              e.currentTarget.style.transform = 'translateY(-50%) scale(1.08)';
+              e.currentTarget.style.backgroundColor = '#d4af37';
+              e.currentTarget.style.color = '#07172c';
+              e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(7, 23, 44, 0.75)';
-              e.currentTarget.style.color = 'var(--gold-400)';
+              e.currentTarget.style.backgroundColor = 'rgba(7, 23, 44, 0.65)';
+              e.currentTarget.style.color = '#d4af37';
               e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
             }}
           >
@@ -365,23 +394,23 @@ export const HeroBannerCarousel = () => {
         </>
       )}
 
-      {/* Pagination Dots (Owl Carousel style) */}
+      {/* ── Pagination Indicator Dots (5-Second Progress) ───────────────────── */}
       {totalSlides > 1 && (
         <div
           style={{
             position: 'absolute',
-            bottom: '2.5rem',
+            bottom: '1.5rem',
             left: '50%',
             transform: 'translateX(-50%)',
-            zIndex: 10,
+            zIndex: 15,
             display: 'flex',
             alignItems: 'center',
             gap: '0.65rem',
             backgroundColor: 'rgba(7, 23, 44, 0.65)',
-            padding: '0.45rem 0.9rem',
+            padding: '0.4rem 0.9rem',
             borderRadius: '9999px',
             backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)'
+            border: '1px solid rgba(255, 255, 255, 0.2)'
           }}
         >
           {activeSlides.map((_, idx) => {
@@ -392,10 +421,10 @@ export const HeroBannerCarousel = () => {
                 onClick={() => goToSlide(idx)}
                 aria-label={`Go to slide ${idx + 1}`}
                 style={{
-                  width: isDotActive ? '26px' : '9px',
+                  width: isDotActive ? '28px' : '9px',
                   height: '9px',
                   borderRadius: '9999px',
-                  backgroundColor: isDotActive ? 'var(--gold-500)' : 'rgba(255, 255, 255, 0.45)',
+                  backgroundColor: isDotActive ? '#d4af37' : 'rgba(255, 255, 255, 0.55)',
                   border: 'none',
                   cursor: 'pointer',
                   padding: 0,
@@ -407,16 +436,17 @@ export const HeroBannerCarousel = () => {
         </div>
       )}
 
-      {/* Keyframe animation styling */}
+      {/* Responsive adjustments */}
       <style>{`
-        @keyframes heroSlideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
+        @media (max-width: 768px) {
+          .hero-nav-arrow {
+            width: 38px !important;
+            height: 38px !important;
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+          .hero-admin-floating-bar {
+            top: 0.75rem !important;
+            right: 0.75rem !important;
+            padding: 0.3rem 0.65rem !important;
           }
         }
       `}</style>
@@ -425,4 +455,3 @@ export const HeroBannerCarousel = () => {
 };
 
 export default HeroBannerCarousel;
-

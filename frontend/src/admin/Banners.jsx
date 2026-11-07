@@ -40,6 +40,57 @@ export const Banners = () => {
     }
   };
 
+  const handleQuickAddPhoto = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    setUploadingBanner(true);
+    try {
+      const res = await api.post('/admin/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (res.success && res.data?.url) {
+        const newBanner = {
+          imageUrl: res.data.url,
+          title: file.name ? file.name.replace(/\.[^/.]+$/, "") : `Campus Banner ${banners.length + 1}`,
+          displayOrder: banners.length + 1,
+          active: true
+        };
+        await api.post('/admin/banners', newBanner);
+        fetchBanners();
+        alert('Photo uploaded and added to Carousel successfully!');
+      }
+    } catch (err) {
+      alert(err.message || 'Failed to upload photo');
+    } finally {
+      setUploadingBanner(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleQuickReplacePhoto = async (banner, file) => {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await api.post('/admin/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (res.success && res.data?.url) {
+        const updated = {
+          ...banner,
+          imageUrl: res.data.url
+        };
+        await api.post('/admin/banners', updated);
+        fetchBanners();
+        alert('Banner photo replaced successfully!');
+      }
+    } catch (err) {
+      alert('Photo replacement failed: ' + (err.message || 'Error'));
+    }
+  };
+
   const fetchBanners = () => {
     setLoading(true);
     api.get('/admin/banners')
@@ -185,9 +236,9 @@ export const Banners = () => {
     <div>
       <div className="admin-header">
         <div>
-          <h1 className="admin-header-title">Hero Banner Owl Carousel Management</h1>
+          <h1 className="admin-header-title">Hero Banner Carousel & Photo Management</h1>
           <p className="admin-header-subtitle">
-            Customize slides, background images, headlines, and call-to-action buttons for the homepage Owl Carousel slider
+            Manage full-screen homepage hero photographs (auto-advancing every 5 seconds). Upload, replace, and reorder campus photos.
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -200,15 +251,63 @@ export const Banners = () => {
           >
             <ExternalLink size={15} /> View Live Carousel
           </a>
+          <label
+            className="btn btn-gold"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              cursor: 'pointer',
+              margin: 0,
+              fontWeight: 700,
+              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.3)'
+            }}
+            title="Upload a photo from your computer to add to the carousel"
+          >
+            <Upload size={16} /> {uploadingBanner ? 'Uploading...' : 'Upload New Photo'}
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleQuickAddPhoto}
+              disabled={uploadingBanner}
+            />
+          </label>
           {activeTab === 'banners' ? (
             <button onClick={openAddBanner} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(10, 37, 64, 0.15)' }}>
-              <Plus size={18} /> Add Carousel Slide
+              <Plus size={18} /> Add Slide URL
             </button>
           ) : (
             <button onClick={() => { resetMedia({ title: '', imageUrl: '', description: '' }); setMediaModalOpen(true); }} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(10, 37, 64, 0.15)' }}>
               <Plus size={18} /> Add Media Asset
             </button>
           )}
+        </div>
+      </div>
+
+      {/* Info Callout */}
+      <div style={{
+        backgroundColor: '#f0fdf4',
+        border: '1.5px solid #bbf7d0',
+        borderRadius: '12px',
+        padding: '0.9rem 1.25rem',
+        marginBottom: '1.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '1rem',
+        flexWrap: 'wrap'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <Sparkles size={20} color="#15803d" />
+          <div>
+            <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#166534' }}>
+              Pure Photo Hero Carousel Active (5-Second Auto-Transition)
+            </div>
+            <div style={{ fontSize: '0.8rem', color: '#15803d' }}>
+              The homepage hero shows pure high-resolution photographs with NO text or color overlay, moving every 5 seconds. Click "Replace Photo" on any slide to update pictures instantly.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -260,13 +359,38 @@ export const Banners = () => {
                 ) : (
                   banners.map((b) => (
                     <tr key={b.id}>
-                      <td style={{ width: '120px' }}>
-                        <img
-                          src={b.imageUrl}
-                          alt={b.title}
-                          style={{ width: '100px', height: '55px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #e2e8f0' }}
-                          onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=400&q=80'; }}
-                        />
+                      <td style={{ width: '160px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                          <img
+                            src={b.imageUrl}
+                            alt={b.title}
+                            style={{ width: '145px', height: '80px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #cbd5e1', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}
+                            onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=400&q=80'; }}
+                          />
+                          <label
+                            className="btn btn-outline-primary btn-xs"
+                            style={{
+                              cursor: 'pointer',
+                              margin: 0,
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '0.35rem',
+                              fontSize: '0.73rem',
+                              padding: '0.22rem 0.5rem',
+                              borderRadius: '4px'
+                            }}
+                            title="Replace this slide's photo directly from your computer"
+                          >
+                            <Upload size={12} /> Replace Photo
+                            <input
+                              type="file"
+                              accept="image/*"
+                              style={{ display: 'none' }}
+                              onChange={(e) => handleQuickReplacePhoto(b, e.target.files?.[0])}
+                            />
+                          </label>
+                        </div>
                       </td>
                       <td>
                         <div style={{ fontWeight: '600', color: b.titleColor || 'var(--primary-900)' }}>{b.title}</div>
