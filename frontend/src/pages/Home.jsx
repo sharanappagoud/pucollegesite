@@ -171,12 +171,20 @@ export const Home = () => {
     }
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsEnquiryVisible(true);
-        }
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsEnquiryVisible(true);
+          } else if (entry.boundingClientRect.top > 0) {
+            // When user scrolls back up above the section, reset so it re-animates smoothly when scrolling down
+            setIsEnquiryVisible(false);
+          }
+        });
       },
-      { threshold: 0.12 }
+      {
+        threshold: 0.08,
+        rootMargin: '0px 0px -30px 0px'
+      }
     );
 
     const currentRef = enquirySectionRef.current;
@@ -573,7 +581,7 @@ export const Home = () => {
       <section
         id="quick-enquiry"
         ref={enquirySectionRef}
-        className={`section section-dark animated fadeInLeft ${isEnquiryVisible ? 'in-view' : 'pre-animate'}`}
+        className={`section section-dark ${isEnquiryVisible ? 'animated fadeInLeft' : 'enquiry-animate-ready'}`}
       >
         <div className="container">
           <div className="grid-2" style={{ alignItems: 'center', gap: '3.5rem' }}>

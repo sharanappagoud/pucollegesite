@@ -1557,7 +1557,7 @@ a {
 @keyframes fadeInLeft {
   0% {
     opacity: 0;
-    transform: translate3d(-60px, 0, 0);
+    transform: translate3d(-80px, 0, 0);
   }
   100% {
     opacity: 1;
@@ -1566,7 +1566,7 @@ a {
 }
 
 .animated {
-  animation-duration: 0.9s;
+  animation-duration: 1s;
   animation-fill-mode: both;
 }
 
@@ -1579,21 +1579,27 @@ a {
   position: relative;
 }
 
-#quick-enquiry.pre-animate {
+#quick-enquiry.enquiry-animate-ready {
   opacity: 0;
-  transform: translate3d(-60px, 0, 0);
+  transform: translate3d(-80px, 0, 0);
+  visibility: hidden;
 }
 
-#quick-enquiry.in-view {
-  animation: fadeInLeft 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+#quick-enquiry.animated.fadeInLeft {
+  visibility: visible;
+  animation-name: fadeInLeft;
+  animation-duration: 1s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #quick-enquiry.pre-animate {
+  #quick-enquiry.enquiry-animate-ready {
     opacity: 1;
     transform: none;
+    visibility: visible;
   }
-  #quick-enquiry.in-view {
+  #quick-enquiry.animated.fadeInLeft {
     animation: none;
   }
 }
