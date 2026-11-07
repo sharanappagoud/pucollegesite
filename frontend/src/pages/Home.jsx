@@ -577,15 +577,16 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Quick Admission Enquiry Section - Animated fadeInLeft (only this section) */}
+      {/* Quick Admission Enquiry Section: Left Column = fadeInLeft | Right Form = fadeInRight */}
       <section
         id="quick-enquiry"
         ref={enquirySectionRef}
-        className={`section section-dark ${isEnquiryVisible ? 'animated fadeInLeft' : 'enquiry-animate-ready'}`}
+        className="section section-dark"
       >
         <div className="container">
           <div className="grid-2" style={{ alignItems: 'center', gap: '3.5rem' }}>
-            <div>
+            {/* Left Column: Text & Features (animated fadeInLeft) */}
+            <div className={isEnquiryVisible ? 'animated fadeInLeft' : 'enquiry-animate-left-ready'}>
               <span className="section-subtitle" style={{ backgroundColor: 'rgba(212, 175, 55, 0.15)', color: 'var(--gold-400)' }}>
                 Fast-Track Admissions 2026-27
               </span>
@@ -612,14 +613,17 @@ export const Home = () => {
               </div>
             </div>
 
-            {/* Online Form Container */}
-            <div style={{
-              backgroundColor: '#ffffff',
-              borderRadius: 'var(--radius-xl)',
-              padding: '2.25rem',
-              color: 'var(--text-main)',
-              boxShadow: 'var(--shadow-xl)'
-            }}>
+            {/* Right Column: Online Form Container (animated fadeInRight) */}
+            <div
+              className={isEnquiryVisible ? 'animated fadeInRight' : 'enquiry-animate-right-ready'}
+              style={{
+                backgroundColor: '#ffffff',
+                borderRadius: 'var(--radius-xl)',
+                padding: '2.25rem',
+                color: 'var(--text-main)',
+                boxShadow: 'var(--shadow-xl)'
+              }}
+            >
               <h3 style={{ fontSize: '1.35rem', marginBottom: '0.25rem', color: 'var(--primary-900)' }}>
                 Online Admission Enquiry
               </h3>
