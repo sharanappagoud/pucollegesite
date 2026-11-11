@@ -75,6 +75,7 @@ export const AdminLayout = () => {
     {
       title: 'SYSTEM & SECURITY',
       items: [
+        { name: 'Navbar Menu & Links', path: '/admin/navbar-menu', icon: Menu },
         { name: 'Navbar & College Settings', path: '/admin/settings', icon: Settings },
         { name: 'Roles & Permissions', path: '/admin/roles', icon: ShieldCheck },
         { name: 'Audit Logs & History', path: '/admin/audit-logs', icon: History },

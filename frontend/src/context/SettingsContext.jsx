@@ -32,6 +32,43 @@ const defaultSettings = {
   principal_accolade: 'Recipient of the State Best Teacher Accolade (2019)',
   principal_full_message: 'Dear Students, Parents, and Well-Wishers,\n\nPre-University education is the critical watershed of higher secondary learning in India. The decisions made during these crucial two years define future trajectories in medicine, engineering, pure research, chartered accountancy, corporate finance, and administration.\n\nAt our institution, we have engineered an academic framework that balances state board requirements with rigorous competitive problem solving. Our faculty members are empathetic mentors who monitor every student\'s learning pace, identify individual strengths, and provide remedial handholding whenever required.\n\nI warmly invite you to visit our campus, interact with our teaching staff, and experience the vibrant learning atmosphere.',
   principal_desk_enabled: 'true',
+  // Dynamic Navbar Items Configuration (Admin ON/OFF toggles & custom labels)
+  nav_show_home: 'true',
+  nav_label_home: 'Home',
+  nav_show_about: 'true',
+  nav_label_about: 'About Us',
+  nav_show_about_history: 'true',
+  nav_show_about_vision: 'true',
+  nav_show_about_principal: 'true',
+  nav_show_about_management: 'true',
+  nav_show_about_student_life: 'true',
+  nav_show_academics: 'true',
+  nav_label_academics: 'Academics',
+  nav_show_academics_science: 'true',
+  nav_show_academics_commerce: 'true',
+  nav_show_academics_coaching: 'true',
+  nav_show_academics_calendar: 'true',
+  nav_show_admissions: 'true',
+  nav_label_admissions: 'Admissions',
+  nav_show_admissions_guidelines: 'true',
+  nav_show_admissions_enquiry: 'true',
+  nav_show_admissions_track: 'true',
+  nav_show_admissions_scholarships: 'true',
+  nav_show_examinations: 'true',
+  nav_label_examinations: 'Examinations',
+  nav_show_faculty: 'true',
+  nav_label_faculty: 'Faculty',
+  nav_show_facilities: 'true',
+  nav_label_facilities: 'Facilities',
+  nav_show_gallery: 'true',
+  nav_label_gallery: 'Gallery',
+  nav_show_news: 'true',
+  nav_label_news: 'News & Events',
+  nav_show_contact: 'true',
+  nav_label_contact: 'Contact',
+  nav_show_apply_btn: 'true',
+  nav_label_apply_btn: 'Apply Now',
+  nav_show_search_btn: 'true',
 };
 
 const SettingsContext = createContext(null);
@@ -107,6 +144,22 @@ export const SettingsProvider = ({ children }) => {
   const navbarBrandSub = getNavbarBrandSub();
   const navbarBrandTagline = settings.navbar_brand_tagline || settings.affiliation || 'Recognized by Dept. of PU Education, Govt. of Karnataka';
 
+  // Navigation menu visibility check (defaults to true if unset or not 'false')
+  const isNavVisible = useCallback((key) => {
+    const val = settings[key];
+    if (val === undefined || val === null || val === '') return true;
+    return val === 'true' || val === true;
+  }, [settings]);
+
+  // Navigation menu custom display label helper
+  const getNavLabel = useCallback((key, fallback) => {
+    const val = settings[key];
+    if (val !== undefined && val !== null && String(val).trim() !== '') {
+      return String(val).trim();
+    }
+    return fallback;
+  }, [settings]);
+
   // Keep HTML document title in sync with college name
   useEffect(() => {
     if (collegeName) {
@@ -127,6 +180,8 @@ export const SettingsProvider = ({ children }) => {
         navbarBrandTagline,
         collegeName,
         collegeShortName,
+        isNavVisible,
+        getNavLabel,
       }}
     >
       {children}

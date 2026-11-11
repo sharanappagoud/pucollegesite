@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Settings as SettingsIcon, Save, CheckCircle2, GraduationCap, 
-  ExternalLink, RefreshCw, Globe, Phone, Shield, Sparkles, Building2, MapPin, UserCheck
+  ExternalLink, RefreshCw, Globe, Phone, Shield, Sparkles, Building2, MapPin, UserCheck, Menu
 } from 'lucide-react';
 import api from '../services/api';
 import { useSettings } from '../context/SettingsContext';
 import { PrincipalDesk } from './PrincipalDesk';
+import { NavbarMenu } from './NavbarMenu';
 
 export const Settings = () => {
   const { settings: globalSettings, refreshSettings, updateMultipleSettings } = useSettings();
@@ -167,6 +168,26 @@ export const Settings = () => {
         >
           <GraduationCap size={18} color={activeTab === 'branding' ? 'var(--primary-700)' : 'inherit'} />
           Navbar & College Branding
+        </button>
+
+        <button
+          onClick={() => setActiveTab('menu')}
+          style={{
+            padding: '0.75rem 1.25rem',
+            border: 'none',
+            background: 'none',
+            borderBottom: activeTab === 'menu' ? '3px solid var(--primary-700)' : '3px solid transparent',
+            color: activeTab === 'menu' ? 'var(--primary-900)' : 'var(--text-muted)',
+            fontWeight: activeTab === 'menu' ? '700' : '600',
+            cursor: 'pointer',
+            fontSize: '0.95rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}
+        >
+          <Menu size={18} color={activeTab === 'menu' ? 'var(--primary-700)' : 'inherit'} />
+          Navbar Menu & Links
         </button>
 
         <button
@@ -471,6 +492,11 @@ export const Settings = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {/* TAB: NAVBAR MENU & LINKS */}
+      {activeTab === 'menu' && (
+        <NavbarMenu />
       )}
 
       {/* TAB 2: CONTACT & ADDRESS */}

@@ -55,6 +55,7 @@ import { BackupMaintenance as AdminBackupMaintenance } from './admin/BackupMaint
 import { AccountSettings as AdminAccountSettings } from './admin/AccountSettings';
 import { ChatbotManagement as AdminChatbotManagement } from './admin/ChatbotManagement';
 import { GalleryManagement as AdminGallery } from './admin/GalleryManagement';
+import { NavbarMenu as AdminNavbarMenu } from './admin/NavbarMenu';
 
 export function App() {
   return (
@@ -102,6 +103,7 @@ export function App() {
         <Route path="notices" element={<AdminNotices />} />
         <Route path="calendar" element={<AdminCalendar />} />
         <Route path="settings" element={<AdminSettings />} />
+        <Route path="navbar-menu" element={<AdminNavbarMenu />} />
 
         {/* 15 New Extended Modules */}
         <Route path="pages" element={<AdminPages />} />
