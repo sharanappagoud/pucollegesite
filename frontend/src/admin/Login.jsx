@@ -132,6 +132,36 @@ export const Login = () => {
           </button>
         </form>
 
+        <div style={{
+          marginTop: '1.25rem',
+          padding: '0.75rem 1rem',
+          backgroundColor: '#f8fafc',
+          border: '1px solid #e2e8f0',
+          borderRadius: '8px',
+          fontSize: '0.8rem',
+          color: '#475569',
+          lineHeight: '1.4'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <strong style={{ color: '#0f172a' }}>Default Credentials:</strong>
+            <button
+              type="button"
+              onClick={() => {
+                const userInput = document.querySelector('input[name="username"]');
+                const passInput = document.querySelector('input[name="password"]');
+                if (userInput) { userInput.value = 'admin'; userInput.dispatchEvent(new Event('input', { bubbles: true })); }
+                if (passInput) { passInput.value = 'Admin@2026!'; passInput.dispatchEvent(new Event('input', { bubbles: true })); }
+              }}
+              style={{ background: 'none', border: 'none', color: '#2563eb', fontSize: '0.75rem', fontWeight: '700', cursor: 'pointer', padding: 0 }}
+            >
+              Autofill
+            </button>
+          </div>
+          <div style={{ marginTop: '0.25rem' }}>
+            User: <code style={{ color: '#1e40af', fontWeight: '700' }}>admin</code> &bull; Pass: <code style={{ color: '#1e40af', fontWeight: '700' }}>Admin@2026!</code>
+          </div>
+        </div>
+
         <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
           <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
             <ArrowLeft size={14} /> Back to Public College Website

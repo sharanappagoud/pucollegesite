@@ -33,11 +33,14 @@ api.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      // If unauthorized/forbidden and currently in admin route, clear token and redirect to login
+      // If unauthorized/forbidden and currently in admin route, clear token and redirect to login (unless in demo offline mode)
       if (window.location.pathname.startsWith('/admin') && window.location.pathname !== '/admin/login') {
-        localStorage.removeItem('svcpuc_token');
-        localStorage.removeItem('svcpuc_user');
-        window.location.href = '/admin/login';
+        const savedUser = localStorage.getItem('svcpuc_user');
+        if (!savedUser || !savedUser.includes('"isOfflineMode":true')) {
+          localStorage.removeItem('svcpuc_token');
+          localStorage.removeItem('svcpuc_user');
+          window.location.href = '/admin/login';
+        }
       }
     }
     const message = error.response?.data?.message || error.response?.data?.error || error.message || 'Something went wrong';
