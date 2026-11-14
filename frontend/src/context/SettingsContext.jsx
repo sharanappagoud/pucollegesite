@@ -2,14 +2,15 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import api from '../services/api';
 
 const defaultSettings = {
-  college_name: 'Sri Vidyodaya Composite Pre-University College',
-  college_short_name: 'SVCPUC',
+  college_name: 'Master Pre-University College',
+  college_short_name: 'MPUC',
   college_tagline: 'Excellence in Pre-University Education & Holistic Development',
   college_code: 'KA-PUC-0842',
   affiliation: 'Recognized by Department of Pre-University Education, Govt. of Karnataka',
-  navbar_brand_name: 'SRI VIDYODAYA',
-  navbar_brand_sub: 'COMPOSITE PRE-UNIVERSITY COLLEGE',
+  navbar_brand_name: 'MASTER',
+  navbar_brand_sub: 'PRE-UNIVERSITY COLLEGE',
   navbar_brand_tagline: 'Recognized by Dept. of PU Education, Govt. of Karnataka',
+  established_year: '1998',
   phone_primary: '+91 80 2345 6789',
   phone_secondary: '+91 80 2345 6790',
   email_primary: 'info@svcpuc.edu.in',
@@ -32,6 +33,14 @@ const defaultSettings = {
   principal_accolade: 'Recipient of the State Best Teacher Accolade (2019)',
   principal_full_message: 'Dear Students, Parents, and Well-Wishers,\n\nPre-University education is the critical watershed of higher secondary learning in India. The decisions made during these crucial two years define future trajectories in medicine, engineering, pure research, chartered accountancy, corporate finance, and administration.\n\nAt our institution, we have engineered an academic framework that balances state board requirements with rigorous competitive problem solving. Our faculty members are empathetic mentors who monitor every student\'s learning pace, identify individual strengths, and provide remedial handholding whenever required.\n\nI warmly invite you to visit our campus, interact with our teaching staff, and experience the vibrant learning atmosphere.',
   principal_desk_enabled: 'true',
+  chatbot_enabled: 'true',
+  chatbot_name: 'MPUC Assistant',
+  chatbot_welcome_message: 'Hello! Welcome to Master Pre-University College (MPUC). How can I assist you today with courses, admissions, fees, or campus facilities?',
+  chatbot_suggested_questions: 'What courses does the college offer?,Which Science combinations are available?,Which Commerce combinations are available?,What are the admission requirements?,What documents are required for admission?,What is the college fee structure?,What facilities are available?,Where is the college located?,How can I contact the admissions office?',
+  google_sheets_owner_email: 'sharanappagoudapolicepatil60@gmail.com',
+  google_sheets_spreadsheet_url: 'https://docs.google.com/spreadsheets/d/1pnE-3S6MjNPtjC8NyHxiIssu7N1QJ9saD2aRYltwl-M/edit?gid=0#gid=0',
+  google_sheets_webhook_url: 'https://script.google.com/macros/s/AKfycby7kbfDb2Ujbym2P_eWZUztboRinriqaVTXp4eBZ324u0U_3Mv9tnrXVSRfLa4stxMNjQ/exec',
+  google_sheets_sync_enabled: 'true',
   // Dynamic Navbar Items Configuration (Admin ON/OFF toggles & custom labels)
   nav_show_home: 'true',
   nav_label_home: 'Home',
@@ -60,7 +69,7 @@ const defaultSettings = {
   nav_label_faculty: 'Faculty',
   nav_show_facilities: 'true',
   nav_label_facilities: 'Facilities',
-  nav_show_gallery: 'true',
+  nav_show_gallery: 'false',
   nav_label_gallery: 'Gallery',
   nav_show_news: 'true',
   nav_label_news: 'News & Events',
@@ -117,8 +126,8 @@ export const SettingsProvider = ({ children }) => {
     await refreshSettings();
   };
 
-  const collegeName = settings.college_name || 'Sri Vidyodaya Composite Pre-University College';
-  const collegeShortName = settings.college_short_name || 'SVCPUC';
+  const collegeName = settings.college_name || 'Master Pre-University College';
+  const collegeShortName = settings.college_short_name || 'MPUC';
 
   const getNavbarBrandName = () => {
     if (settings.navbar_brand_name && settings.navbar_brand_name.trim() !== '') {
@@ -130,14 +139,14 @@ export const SettingsProvider = ({ children }) => {
     if (settings.college_name && settings.college_name.trim() !== '') {
       return settings.college_name.trim();
     }
-    return 'SRI VIDYODAYA';
+    return 'MASTER';
   };
 
   const getNavbarBrandSub = () => {
     if (settings.navbar_brand_sub && settings.navbar_brand_sub.trim() !== '') {
       return settings.navbar_brand_sub.trim();
     }
-    return 'COMPOSITE PRE-UNIVERSITY COLLEGE';
+    return 'PRE-UNIVERSITY COLLEGE';
   };
 
   const navbarBrandName = getNavbarBrandName();
