@@ -825,3 +825,4 @@ export const NavbarMenu = () => {
     </div>
   );
 };
+
