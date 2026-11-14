@@ -6,12 +6,100 @@ import {
 } from 'lucide-react';
 import api from '../services/api';
 
+const defaultCourses = [
+  {
+    id: 1,
+    code: 'PCMB',
+    name: 'Physics, Chemistry, Mathematics, Biology',
+    stream: 'SCIENCE',
+    duration: '2 Years',
+    description: 'Premier combination for medicine, surgery, bio-engineering, biotechnology, pharmacy, and multidisciplinary scientific careers.',
+    eligibility: 'Pass in 10th Standard / SSLC / CBSE / ICSE or equivalent with minimum 60% aggregate in Science and Mathematics.',
+    careerProspects: 'MBBS, BDS, B.V.Sc, B.Pharm, Biotechnology, Pure Science Research (IISc/IISER), Biomedical Engineering.',
+    feePerYear: 65000,
+    subjects: [
+      { id: 101, subjectName: 'Physics', isCore: true },
+      { id: 102, subjectName: 'Chemistry', isCore: true },
+      { id: 103, subjectName: 'Mathematics', isCore: true },
+      { id: 104, subjectName: 'Biology', isCore: true },
+      { id: 105, subjectName: 'English', isCore: false },
+      { id: 106, subjectName: 'Kannada / Hindi / Sanskrit', isCore: false },
+    ]
+  },
+  {
+    id: 2,
+    code: 'PCMC',
+    name: 'Physics, Chemistry, Mathematics, Computer Science',
+    stream: 'SCIENCE',
+    duration: '2 Years',
+    description: 'Engineered for aspiring computer scientists, software architects, AI engineers, and hardware specialists with Python & C++ practicals.',
+    eligibility: 'Pass in 10th Standard / SSLC / CBSE / ICSE with high proficiency in Mathematics and Physical Sciences.',
+    careerProspects: 'B.E. / B.Tech in Computer Science, Artificial Intelligence, Data Science, Cyber Security, Robotics, B.Sc. IT.',
+    feePerYear: 70000,
+    subjects: [
+      { id: 201, subjectName: 'Physics', isCore: true },
+      { id: 202, subjectName: 'Chemistry', isCore: true },
+      { id: 203, subjectName: 'Mathematics', isCore: true },
+      { id: 204, subjectName: 'Computer Science', isCore: true },
+      { id: 205, subjectName: 'English', isCore: false },
+      { id: 206, subjectName: 'Kannada / Hindi / Sanskrit', isCore: false },
+    ]
+  },
+  {
+    id: 3,
+    code: 'CEBA',
+    name: 'Computer Science, Economics, Business Studies, Accountancy',
+    stream: 'COMMERCE',
+    duration: '2 Years',
+    description: 'Tailored for tech-savvy finance leaders, fintech innovators, corporate analysts, and modern chartered accountants.',
+    eligibility: 'Pass in 10th Standard / SSLC / CBSE / ICSE with minimum 55% aggregate marks.',
+    careerProspects: 'B.Com, BBA (FinTech), Chartered Accountancy (CA), CS, Corporate Law, Financial Risk Management, Banking.',
+    feePerYear: 55000,
+    subjects: [
+      { id: 301, subjectName: 'Computer Science', isCore: true },
+      { id: 302, subjectName: 'Economics', isCore: true },
+      { id: 303, subjectName: 'Business Studies', isCore: true },
+      { id: 304, subjectName: 'Accountancy', isCore: true },
+      { id: 305, subjectName: 'English', isCore: false },
+      { id: 306, subjectName: 'Kannada / Hindi / Sanskrit', isCore: false },
+    ]
+  },
+  {
+    id: 4,
+    code: 'MEBA',
+    name: 'Basic Maths, Economics, Business Studies, Accountancy',
+    stream: 'COMMERCE',
+    duration: '2 Years',
+    description: 'Classic analytical business combination blending commercial arithmetic with economic theories and auditing principles.',
+    eligibility: 'Pass in 10th Standard / SSLC / CBSE / ICSE or equivalent examination.',
+    careerProspects: 'Chartered Accountancy (CA), Cost & Management Accounting (CMA), B.Com (Honours), Investment Banking, Civil Services.',
+    feePerYear: 52000,
+    subjects: [
+      { id: 401, subjectName: 'Basic Mathematics', isCore: true },
+      { id: 402, subjectName: 'Economics', isCore: true },
+      { id: 403, subjectName: 'Business Studies', isCore: true },
+      { id: 404, subjectName: 'Accountancy', isCore: true },
+      { id: 405, subjectName: 'English', isCore: false },
+      { id: 406, subjectName: 'Kannada / Hindi / Sanskrit', isCore: false },
+    ]
+  }
+];
+
+const defaultCalendar = [
+  { id: 1, eventName: 'Commencement of 1st PUC Academic Session', eventDate: '2026-06-15', category: 'ACADEMIC', description: 'Orientation program and stream distribution.' },
+  { id: 2, eventName: 'First Unit Test Assessment Series', eventDate: '2026-08-01', category: 'EXAMINATION', description: 'Internal assessment on foundational units.' },
+  { id: 3, eventName: 'Mid-Term Examinations 2026', eventDate: '2026-10-12', category: 'EXAMINATION', description: 'Comprehensive mid-year evaluations across all subjects.' },
+  { id: 4, eventName: 'Annual Sports & Athletic Meet', eventDate: '2026-11-20', category: 'SPORTS', description: 'Track events, inter-class tournaments, and team relays.' },
+  { id: 5, eventName: 'Preparatory Board Examinations', eventDate: '2027-01-18', category: 'EXAMINATION', description: 'Full syllabus mock board examinations.' },
+  { id: 6, eventName: 'Karnataka State PU Annual Board Exams', eventDate: '2027-03-01', category: 'EXAMINATION', description: 'Final Karnataka School Examination and Assessment Board (KSEAB) examinations.' }
+];
+
 export const Academics = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialStream = searchParams.get('stream') || 'ALL';
   const [activeStream, setActiveStream] = useState(initialStream);
-  const [courses, setCourses] = useState([]);
-  const [calendar, setCalendar] = useState([]);
+  const [courses, setCourses] = useState(defaultCourses);
+  const [calendar, setCalendar] = useState(defaultCalendar);
 
   useEffect(() => {
     const streamFromUrl = searchParams.get('stream') || 'ALL';
@@ -21,14 +109,36 @@ export const Academics = () => {
   useEffect(() => {
     const streamParam = activeStream === 'ALL' ? '' : `?stream=${activeStream}`;
     api.get(`/courses${streamParam}`)
-      .then(res => res.success && setCourses(res.data))
-      .catch(() => {});
+      .then(res => {
+        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+          setCourses(res.data);
+        } else {
+          if (activeStream === 'ALL') {
+            setCourses(defaultCourses);
+          } else {
+            setCourses(defaultCourses.filter(c => c.stream === activeStream));
+          }
+        }
+      })
+      .catch(() => {
+        if (activeStream === 'ALL') {
+          setCourses(defaultCourses);
+        } else {
+          setCourses(defaultCourses.filter(c => c.stream === activeStream));
+        }
+      });
   }, [activeStream]);
 
   useEffect(() => {
     api.get('/calendar?year=2026-27')
-      .then(res => res.success && setCalendar(res.data))
-      .catch(() => {});
+      .then(res => {
+        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+          setCalendar(res.data);
+        } else {
+          setCalendar(defaultCalendar);
+        }
+      })
+      .catch(() => setCalendar(defaultCalendar));
   }, []);
 
   const handleStreamChange = (stream) => {

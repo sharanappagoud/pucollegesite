@@ -181,8 +181,13 @@ export const AdminLayout = () => {
             >
               {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-            <span style={{ fontSize: '0.88rem', color: '#475569' }}>
+            <span style={{ fontSize: '0.88rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
               Welcome back, <strong style={{ color: '#0f172a' }}>{user?.fullName || user?.username || 'Administrator'}</strong>
+              {user?.isOfflineMode && (
+                <span style={{ backgroundColor: '#fef3c7', color: '#92400e', border: '1px solid #fde68a', padding: '0.15rem 0.55rem', borderRadius: '4px', fontSize: '0.72rem', fontWeight: '700' }} title="Operating in offline demo session on static hosting. To sync live MySQL changes, configure VITE_API_URL in Vercel to point to your cloud-deployed Spring Boot backend.">
+                  Demo Session (Cloud API Not Connected)
+                </span>
+              )}
             </span>
           </div>
 

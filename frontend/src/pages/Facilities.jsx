@@ -5,16 +5,80 @@ import {
 } from 'lucide-react';
 import api from '../services/api';
 
+const defaultFacilities = [
+  {
+    id: 1,
+    title: 'Advanced Science & Research Laboratories',
+    category: 'Laboratories',
+    description: 'Fully equipped Physics, Chemistry, and Biology laboratories adhering strictly to Karnataka PU Board practical syllabus and safety regulations.',
+    imageUrl: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80',
+    features: 'Individual experimental workstations, Modern digital apparatus & microscopes, Acid-resistant fume hoods, Certified laboratory safety protocol'
+  },
+  {
+    id: 2,
+    title: 'Central Digital Library & Reference Wing',
+    category: 'Academic Resource',
+    description: 'Quiet sanctuary housing over 15,000 reference volumes, standard state board textbooks, national entrance exam study material, and high-speed research terminals.',
+    imageUrl: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80',
+    features: 'Delnet & Inflibnet e-journal access, Dedicated quiet study carrels, Automated barcode check-out system, Extensive entrance question bank archives'
+  },
+  {
+    id: 3,
+    title: 'High-Tech Computing & AI Hub',
+    category: 'Technology',
+    description: 'Contemporary computer centre with Gigabit fiber connectivity, modern workstations, and licensed development environments for Computer Science curriculum.',
+    imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
+    features: 'Intel Core i7 workstations, High-speed fiber internet, Dual-display projector seminar mode, Dedicated UPS power backup'
+  },
+  {
+    id: 4,
+    title: 'Sports Complex & Multi-Purpose Arena',
+    category: 'Athletics & Fitness',
+    description: 'Expansive outdoor and indoor sports facilities designed to foster sportsmanship, physical vigor, and team spirit among all collegiate students.',
+    imageUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80',
+    features: 'Standard basketball & volleyball courts, Indoor table tennis & chess pavilion, Qualified sports coaches, Annual inter-collegiate athletic meet'
+  }
+];
+
+const defaultFacilityGallery = [
+  {
+    id: 'fac-gal-1',
+    title: 'Physics Practical Lab',
+    imageUrl: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    id: 'fac-gal-2',
+    title: 'Central Reading Hall',
+    imageUrl: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    id: 'fac-gal-3',
+    title: 'Computer Lab Workstations',
+    imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    id: 'fac-gal-4',
+    title: 'Campus Greenery & Walkways',
+    imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=600&q=80'
+  }
+];
+
 export const Facilities = () => {
-  const [facilities, setFacilities] = useState([]);
-  const [galleryImages, setGalleryImages] = useState([]);
+  const [facilities, setFacilities] = useState(defaultFacilities);
+  const [galleryImages, setGalleryImages] = useState(defaultFacilityGallery);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(0);
 
   useEffect(() => {
     api.get('/facilities')
-      .then(res => res.success && setFacilities(res.data))
-      .catch(() => {});
+      .then(res => {
+        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+          setFacilities(res.data);
+        } else {
+          setFacilities(defaultFacilities);
+        }
+      })
+      .catch(() => setFacilities(defaultFacilities));
 
     api.get('/gallery/categories')
       .then(res => res.success && setCategories(res.data))
@@ -27,8 +91,14 @@ export const Facilities = () => {
     setSelectedCategory(catId);
     const param = catId > 0 ? `?categoryId=${catId}` : '';
     api.get(`/gallery${param}`)
-      .then(res => res.success && setGalleryImages(res.data))
-      .catch(() => {});
+      .then(res => {
+        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+          setGalleryImages(res.data);
+        } else {
+          setGalleryImages(defaultFacilityGallery);
+        }
+      })
+      .catch(() => setGalleryImages(defaultFacilityGallery));
   };
 
   return (

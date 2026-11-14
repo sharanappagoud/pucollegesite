@@ -7,11 +7,56 @@ import api from '../services/api';
  * Uses pure CSS animations + React for full Vite/ESM compatibility.
  * Fetches images from /api/v1/gallery with optional category filtering.
  */
+const defaultGalleryImages = [
+  {
+    id: 'def-1',
+    title: 'Advanced Physics & Chemistry Research Laboratory',
+    categoryName: 'Science Labs',
+    imageUrl: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80',
+    description: 'High-tech lab setups for hands-on experiments.'
+  },
+  {
+    id: 'def-2',
+    title: 'Central Digital Library & Research Hall',
+    categoryName: 'Library',
+    imageUrl: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80',
+    description: 'Extensive repository of collegiate reference books & e-journals.'
+  },
+  {
+    id: 'def-3',
+    title: 'Computer Science & Computational Lab',
+    categoryName: 'Technology',
+    imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
+    description: 'Modern computing terminals for programming & data analytics.'
+  },
+  {
+    id: 'def-4',
+    title: 'Annual Cultural Fest & Stage Performances',
+    categoryName: 'Events',
+    imageUrl: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80',
+    description: 'Vibrant artistic displays and student talents.'
+  },
+  {
+    id: 'def-5',
+    title: 'Inter-Collegiate Sports Tournament & Athletic Meet',
+    categoryName: 'Sports',
+    imageUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80',
+    description: 'Track and court events promoting team spirit and physical fitness.'
+  },
+  {
+    id: 'def-6',
+    title: 'Main Academic Quadrangle & Campus Greenery',
+    categoryName: 'Campus',
+    imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80',
+    description: 'Serene botanical surroundings conducive to focused learning.'
+  }
+];
+
 export const CampusGallery = () => {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState(defaultGalleryImages);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [lightboxImg, setLightboxImg] = useState(null);
   const [autoPlay, setAutoPlay] = useState(true);
@@ -45,8 +90,14 @@ export const CampusGallery = () => {
     setCurrentSlide(0);
     const url = selectedCategory ? `/gallery?categoryId=${selectedCategory}` : '/gallery';
     api.get(url)
-      .then(res => setImages(res.success ? (res.data || []) : []))
-      .catch(() => setImages([]))
+      .then(res => {
+        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+          setImages(res.data);
+        } else {
+          setImages(defaultGalleryImages);
+        }
+      })
+      .catch(() => setImages(defaultGalleryImages))
       .finally(() => setLoading(false));
   }, [selectedCategory]);
 

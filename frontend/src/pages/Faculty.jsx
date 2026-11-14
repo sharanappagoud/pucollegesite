@@ -2,8 +2,83 @@ import React, { useState, useEffect } from 'react';
 import { Mail, Phone, BookOpen, Award, GraduationCap } from 'lucide-react';
 import api from '../services/api';
 
+const defaultFaculty = [
+  {
+    id: 1,
+    fullName: 'Dr. K. S. Venkatesh',
+    department: 'Physics',
+    designation: 'Principal & Senior Professor',
+    qualification: 'M.Sc., M.Phil., Ph.D.',
+    photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+    bio: 'Over 24 years of teaching excellence in Electrodynamics and Modern Physics. Recipient of the State Best Teacher Accolade.',
+    subjectsTaught: 'Physics (PUC I & II), KCET & NEET Masterclasses',
+    experienceYears: 24,
+    email: 'principal@svcpuc.edu.in'
+  },
+  {
+    id: 2,
+    fullName: 'Prof. Meenakshi Sundaram',
+    department: 'Chemistry',
+    designation: 'Head of Department',
+    qualification: 'M.Sc., B.Ed., NET',
+    photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
+    bio: 'Specialist in Organic Chemistry reaction mechanisms and physical equilibrium with 18 years of collegiate mentorship.',
+    subjectsTaught: 'Organic Chemistry, Biomolecules, Competitive Test Series',
+    experienceYears: 18,
+    email: 'chemistry@svcpuc.edu.in'
+  },
+  {
+    id: 3,
+    fullName: 'Prof. Raghavendra Rao',
+    department: 'Mathematics',
+    designation: 'Senior Faculty & CET Coordinator',
+    qualification: 'M.Sc. (Applied Mathematics)',
+    photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+    bio: 'Acclaimed mentor for Calculus and Coordinate Geometry with shortcut techniques for KCET and JEE Main aspirants.',
+    subjectsTaught: 'Mathematics (Calculus, Vectors, Algebra)',
+    experienceYears: 16,
+    email: 'maths@svcpuc.edu.in'
+  },
+  {
+    id: 4,
+    fullName: 'Dr. Shalini Deshpande',
+    department: 'Biology',
+    designation: 'Senior Lecturer',
+    qualification: 'M.Sc., Ph.D. in Botany',
+    photoUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80',
+    bio: 'Empathetic educator guiding NEET aspirants with diagrams, NCERT line-by-line analyses, and genetics workshops.',
+    subjectsTaught: 'Botany, Zoology, NEET Biology Fast-Track',
+    experienceYears: 14,
+    email: 'biology@svcpuc.edu.in'
+  },
+  {
+    id: 5,
+    fullName: 'Prof. Rajeshwari Kulkarni',
+    department: 'Commerce & Accountancy',
+    designation: 'HOD Commerce',
+    qualification: 'M.Com, M.Phil, UGC-NET',
+    photoUrl: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=200&q=80',
+    bio: 'Expert in Corporate Accounting and Financial Statements. Proven track record of 100% centum scores in state board exams.',
+    subjectsTaught: 'Accountancy, Business Studies, CA Foundation Basics',
+    experienceYears: 19,
+    email: 'commerce@svcpuc.edu.in'
+  },
+  {
+    id: 6,
+    fullName: 'Prof. Anand Vardhan',
+    department: 'Computer Science',
+    designation: 'Lecturer in Computer Science',
+    qualification: 'M.C.A., M.Tech (CSE)',
+    photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+    bio: 'Passionately teaching Python, SQL, C++, and computational problem-solving with practical live-coding sessions.',
+    subjectsTaught: 'Computer Science (Python & DBMS), Web Fundamentals',
+    experienceYears: 11,
+    email: 'cs@svcpuc.edu.in'
+  }
+];
+
 export const Faculty = () => {
-  const [faculty, setFaculty] = useState([]);
+  const [faculty, setFaculty] = useState(defaultFaculty);
   const [selectedDept, setSelectedDept] = useState('ALL');
   const [departments, setDepartments] = useState([
     'ALL', 'Physics', 'Chemistry', 'Mathematics', 'Biology', 
@@ -13,8 +88,25 @@ export const Faculty = () => {
   useEffect(() => {
     const deptParam = selectedDept === 'ALL' ? '' : `?department=${encodeURIComponent(selectedDept)}`;
     api.get(`/faculty${deptParam}`)
-      .then(res => res.success && setFaculty(res.data))
-      .catch(() => {});
+      .then(res => {
+        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+          setFaculty(res.data);
+        } else {
+          // Filter default faculty by department if selected
+          if (selectedDept === 'ALL') {
+            setFaculty(defaultFaculty);
+          } else {
+            setFaculty(defaultFaculty.filter(f => f.department.toLowerCase().includes(selectedDept.toLowerCase())));
+          }
+        }
+      })
+      .catch(() => {
+        if (selectedDept === 'ALL') {
+          setFaculty(defaultFaculty);
+        } else {
+          setFaculty(defaultFaculty.filter(f => f.department.toLowerCase().includes(selectedDept.toLowerCase())));
+        }
+      });
   }, [selectedDept]);
 
   return (
