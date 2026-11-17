@@ -3,6 +3,8 @@ import { MapPin, Phone, Mail, Clock, Send, CheckCircle2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import api from '../services/api';
 import { useSettings } from '../context/SettingsContext';
+import { WhatsAppButton } from '../components/WhatsAppButton';
+import { WhatsAppIcon } from '../components/FloatingWhatsApp';
 
 export const Contact = () => {
   const { collegeName, settings } = useSettings();
@@ -113,6 +115,23 @@ export const Contact = () => {
                       Monday – Friday: 8:30 AM – 4:30 PM<br />
                       Saturday: 8:30 AM – 1:30 PM (Sundays Closed)
                     </p>
+                  </div>
+                </div>
+
+                {/* WhatsApp Business Official Helpdesk Card */}
+                <div className="card" style={{ display: 'flex', gap: '1rem', alignItems: 'center', backgroundColor: '#f0fdf4', border: '1.5px solid #86efac' }}>
+                  <div style={{ backgroundColor: '#25D366', color: '#ffffff', padding: '0.75rem', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <WhatsAppIcon size={26} color="#ffffff" />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <h4 style={{ fontSize: '1.05rem', color: '#065f46', marginBottom: '0.2rem', fontWeight: '700' }}>Official WhatsApp Business Helpdesk</h4>
+                    <p style={{ fontSize: '0.82rem', color: '#047857', marginBottom: '0.6rem' }}>
+                      Fast-track chat with admissions coordinators and college counselors.
+                    </p>
+                    <WhatsAppButton
+                      text="Chat on WhatsApp (+91 80234 56789)"
+                      message="Hello MPUC College, I have a general enquiry regarding admissions, campus visits, or college timings."
+                    />
                   </div>
                 </div>
               </div>

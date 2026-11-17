@@ -4,6 +4,7 @@ import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { AnnouncementTicker } from '../components/AnnouncementTicker';
 import { ChatbotWidget } from '../components/chatbot/ChatbotWidget';
+import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
 import { ScrollToAnchor } from '../components/ScrollToAnchor';
 
 export const PublicLayout = () => {
@@ -17,6 +18,7 @@ export const PublicLayout = () => {
       </main>
       <Footer />
       <ChatbotWidget />
+      <FloatingWhatsApp />
     </div>
   );
 };

@@ -10,6 +10,7 @@ import api from '../services/api';
 import { useSettings } from '../context/SettingsContext';
 import { useAuth } from '../context/AuthContext';
 import { HeroBannerCarousel } from '../components/HeroBannerCarousel';
+import { WhatsAppButton } from '../components/WhatsAppButton';
 
 const defaultCourses = [
   {
@@ -654,6 +655,13 @@ export const Home = () => {
                   <span>Free sample test series and counselling session for KCET & NEET aspirants.</span>
                 </div>
               </div>
+
+              <div style={{ marginTop: '1.75rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <WhatsAppButton
+                  text="Chat with Admissions on WhatsApp"
+                  message="Hello MPUC College, I would like to enquire about PU Admissions for the 2026-27 academic year."
+                />
+              </div>
             </div>
 
             {/* Right Column: Online Form Container (animated fadeInRight - Dark Royal Glass) */}
@@ -700,13 +708,18 @@ export const Home = () => {
                   <p style={{ fontSize: '0.82rem', color: '#065f46' }}>
                     Please save this reference number. Our admissions desk will contact you at {enquirySuccess.studentPhone}.
                   </p>
-                  <button
-                    onClick={() => setEnquirySuccess(null)}
-                    className="btn btn-outline-primary btn-sm"
-                    style={{ marginTop: '1rem' }}
-                  >
-                    Submit Another Enquiry
-                  </button>
+                  <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center' }}>
+                    <WhatsAppButton
+                      text="Continue on WhatsApp"
+                      message={`Hello MPUC Admissions, I have submitted an online enquiry [Ref: ${enquirySuccess.referenceNo}] for ${enquirySuccess.studentName || 'my ward'}. Please guide me on next steps.`}
+                    />
+                    <button
+                      onClick={() => setEnquirySuccess(null)}
+                      className="btn btn-outline-primary btn-sm"
+                    >
+                      Submit Another Enquiry
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit(onSubmitEnquiry)}>

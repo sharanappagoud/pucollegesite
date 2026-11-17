@@ -5,6 +5,7 @@ import {
   BarChart3, PieChart, CheckCircle2, Calendar, Award, ArrowRight 
 } from 'lucide-react';
 import api from '../services/api';
+import { WhatsAppButton } from '../components/WhatsAppButton';
 
 const defaultCourses = [
   {
@@ -304,16 +305,27 @@ export const Academics = () => {
                   </p>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)', flexWrap: 'wrap', gap: '0.75rem' }}>
                   <div>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Estimated Annual Fee</span>
                     <div style={{ fontWeight: '800', color: 'var(--primary-900)', fontSize: '1.1rem' }}>
                       ₹{Number(course.feePerYear || 50000).toLocaleString('en-IN')}
                     </div>
                   </div>
-                  <Link to="/admissions#enquiry-form" className="btn btn-gold btn-sm">
-                    Enquire for {course.code} <ArrowRight size={14} />
-                  </Link>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <WhatsAppButton
+                      text="WhatsApp"
+                      message={course.stream === 'SCIENCE'
+                        ? `Hello MPUC College, I am interested in Science combinations (${course.code} - ${course.name}). Could you share details regarding eligibility, curriculum, and lab facilities?`
+                        : `Hello MPUC College, I am interested in Commerce combinations (${course.code} - ${course.name}). Could you share details regarding subjects, coaching, and career opportunities?`}
+                      variant="outline"
+                      iconSize={16}
+                      style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                    />
+                    <Link to="/admissions#enquiry-form" className="btn btn-gold btn-sm">
+                      Enquire <ArrowRight size={14} />
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}

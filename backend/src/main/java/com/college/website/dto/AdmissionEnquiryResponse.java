@@ -22,6 +22,7 @@ public class AdmissionEnquiryResponse {
     private String referredBy;
     private String status;
     private String followUpNotes;
+    private String whatsAppUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -65,6 +66,8 @@ public class AdmissionEnquiryResponse {
     public void setStatus(String status) { this.status = status; }
     public String getFollowUpNotes() { return followUpNotes; }
     public void setFollowUpNotes(String followUpNotes) { this.followUpNotes = followUpNotes; }
+    public String getWhatsAppUrl() { return whatsAppUrl; }
+    public void setWhatsAppUrl(String whatsAppUrl) { this.whatsAppUrl = whatsAppUrl; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

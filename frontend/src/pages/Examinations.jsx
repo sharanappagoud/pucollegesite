@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { WhatsAppButton } from '../components/WhatsAppButton';
 
 export const Examinations = () => {
   const { isAuthenticated, user } = useAuth();
@@ -232,7 +233,7 @@ export const Examinations = () => {
             Official examination schedules, timetables, internal assessment calendar, circulars, previous question papers, and guidelines for 1st & 2nd PUC students.
           </p>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1.75rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <a href="#timetables" className="btn btn-gold btn-sm">
               <Calendar size={15} /> View Timetables
             </a>
@@ -246,6 +247,10 @@ export const Examinations = () => {
             <a href="#rules" className="btn btn-outline-white btn-sm" style={{ border: '1px solid rgba(255,255,255,0.4)', color: '#fff' }}>
               <ShieldCheck size={15} /> Exam Rules
             </a>
+            <WhatsAppButton
+              text="WhatsApp Exam Enquiry"
+              message="Hello MPUC Examination Cell, I would like to enquire about upcoming PU Board examinations, time tables, and model question papers."
+            />
           </div>
         </div>
       </section>
@@ -1141,6 +1146,12 @@ export const Examinations = () => {
                     <Clock size={18} color="var(--primary-700)" />
                     <span><strong>Counter Hours:</strong> Monday – Saturday: 9:30 AM to 4:00 PM</span>
                   </div>
+                </div>
+                <div style={{ marginTop: '1.25rem' }}>
+                  <WhatsAppButton
+                    text="Enquire Exam Timetable on WhatsApp"
+                    message="Hello MPUC Examination Cell, I would like to enquire about upcoming PU Board examinations, time tables, and model question papers."
+                  />
                 </div>
               </div>
 

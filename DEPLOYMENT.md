@@ -33,24 +33,27 @@ npm run dev
 
 ---
 
-## 2. Docker Compose Production Deployment
+## 2. Single-Server DigitalOcean Deployment
 
-To run the complete production stack (MySQL 8 + Spring Boot + Nginx + React):
+Create an Ubuntu 24.04 Droplet (2 vCPUs / 4 GB RAM is a reasonable starting size), point your domain's DNS A record to the Droplet's public IP, and allow inbound TCP ports 22, 80, and 443 in the cloud firewall. Install Docker Engine with the Compose plugin, clone this repository, and run these commands from its root:
 
 ```bash
-# From repository root
-docker-compose up -d --build
+cp .env.example .env
+openssl rand -base64 36
+# Put unique generated values in .env for DB_PASSWORD, MYSQL_ROOT_PASSWORD,
+# and APP_JWT_SECRET. Set DOMAIN to your actual domain.
+docker compose up -d --build
 ```
 
-- Public Website: `http://localhost`
-- Admin Dashboard: `http://localhost/admin`
-- Swagger API Docs: `http://localhost/swagger-ui/index.html`
-- MySQL Database: `localhost:3306` (Database: `pucollege_db`)
+The public website and admin dashboard are served over HTTPS at `https://<your-domain>`. Caddy obtains and renews the TLS certificate automatically. The database and backend are only reachable by other Compose services; only ports 80 and 443 are published by the stack. MySQL data and uploads persist in Docker volumes.
 
-To stop the containers:
+To check the services:
 ```bash
-docker-compose down
+docker compose ps
+docker compose logs -f backend
 ```
+
+Back up the MySQL volume and `uploads-data` volume regularly to storage outside the Droplet. Do not commit `.env`; keep the Droplet firewall's MySQL port (3306) closed. Change the seeded administrator password before sharing the public URL.
 
 ---
 

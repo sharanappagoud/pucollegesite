@@ -31,19 +31,22 @@ public class AdmissionEnquiryService {
     private final GoogleSheetsSyncService googleSheetsSyncService;
     private final EmailSenderService emailSenderService;
     private final CommunicationLogService communicationLogService;
+    private final WhatsAppService whatsAppService;
 
     public AdmissionEnquiryService(AdmissionEnquiryRepository enquiryRepository,
                                    EntityDtoMapper mapper,
                                    AuditLogService auditLogService,
                                    GoogleSheetsSyncService googleSheetsSyncService,
                                    EmailSenderService emailSenderService,
-                                   CommunicationLogService communicationLogService) {
+                                   CommunicationLogService communicationLogService,
+                                   WhatsAppService whatsAppService) {
         this.enquiryRepository = enquiryRepository;
         this.mapper = mapper;
         this.auditLogService = auditLogService;
         this.googleSheetsSyncService = googleSheetsSyncService;
         this.emailSenderService = emailSenderService;
         this.communicationLogService = communicationLogService;
+        this.whatsAppService = whatsAppService;
     }
 
     @Transactional
@@ -148,7 +151,46 @@ public class AdmissionEnquiryService {
             // Non-blocking fallback
         }
 
-        return mapper.toDto(saved);
+        AdmissionEnquiryResponse response = mapper.toDto(saved);
+        try {
+            WhatsAppSetting waSetting = whatsAppService.getOrCreateSettings();
+            String prefillMsg = String.format("Hello MPUC Admissions, I have submitted an online admission enquiry for %s [Ref: %s] for %s (%s). Please guide me on next steps.",
+                    saved.getStudentName(), saved.getReferenceNo(), saved.getPreferredStream(), saved.getPreferredCombination());
+            String waUrl = whatsAppService.generateClickToChatUrl(waSetting.getPhoneNumber(), prefillMsg);
+            response.setWhatsAppUrl(waUrl);
+
+            // Record user opt-in record
+            String contactPhone = (saved.getStudentPhone() != null && !saved.getStudentPhone().isBlank())
+                    ? saved.getStudentPhone() : saved.getParentPhone();
+            if (contactPhone != null && !contactPhone.isBlank()) {
+                WhatsAppOptInRequestDto optInDto = new WhatsAppOptInRequestDto();
+                optInDto.setPhoneNumber(contactPhone);
+                optInDto.setStudentName(saved.getStudentName());
+                optInDto.setOptInSource("ADMISSION_ENQUIRY");
+                optInDto.setIsOptedIn(true);
+                whatsAppService.recordOptIn(optInDto);
+            }
+
+            // Automated template notification if enabled
+            if (Boolean.TRUE.equals(waSetting.getAutoNotificationsEnabled()) && Boolean.TRUE.equals(waSetting.getNotifyOnEnquiry())) {
+                WhatsAppSendRequestDto sendReq = new WhatsAppSendRequestDto();
+                sendReq.setRecipientPhone(contactPhone);
+                sendReq.setRecipientName(saved.getStudentName());
+                sendReq.setTemplateName("admission_enquiry_ack");
+                sendReq.setParameters(java.util.List.of(
+                        saved.getStudentName(),
+                        saved.getReferenceNo(),
+                        saved.getPreferredCombination() != null ? saved.getPreferredCombination() : saved.getPreferredStream()
+                ));
+                sendReq.setReferenceType("ENQUIRY");
+                sendReq.setReferenceId(saved.getReferenceNo());
+                whatsAppService.sendMessage(sendReq);
+            }
+        } catch (Exception waEx) {
+            // Non-blocking fallback
+        }
+
+        return response;
     }
 
     private synchronized String generateUniqueReferenceNumber() {

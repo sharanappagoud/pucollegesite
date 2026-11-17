@@ -22,7 +22,7 @@
    -------------------------------------------------------------------------- */
 .mpuc-chat-launcher {
   position: fixed;
-  bottom: 24px;
+  bottom: 96px;
   right: 24px;
   z-index: 9999;
   display: flex;
@@ -603,7 +603,7 @@
    -------------------------------------------------------------------------- */
 @media (max-width: 480px) {
   .mpuc-chat-launcher {
-    bottom: 16px;
+    bottom: 80px;
     right: 16px;
     padding: 8px 14px 8px 10px;
   }

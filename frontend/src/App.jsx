@@ -56,6 +56,7 @@ import { AccountSettings as AdminAccountSettings } from './admin/AccountSettings
 import { ChatbotManagement as AdminChatbotManagement } from './admin/ChatbotManagement';
 import { GalleryManagement as AdminGallery } from './admin/GalleryManagement';
 import { NavbarMenu as AdminNavbarMenu } from './admin/NavbarMenu';
+import { WhatsAppManagement } from './admin/WhatsAppManagement';
 
 export function App() {
   return (
@@ -125,6 +126,7 @@ export function App() {
         <Route path="backup" element={<AdminBackupMaintenance />} />
         <Route path="account" element={<AdminAccountSettings />} />
         <Route path="chatbot" element={<AdminChatbotManagement />} />
+        <Route path="whatsapp" element={<WhatsAppManagement />} />
       </Route>
     </Routes>
   );

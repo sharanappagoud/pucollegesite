@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+!.env.example
+**/node_modules
+**/target
+**/dist
+uploads
+backend/uploads
+mpuc_college_backup.sql
+.DS_Store

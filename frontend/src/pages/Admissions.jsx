@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import api from '../services/api';
+import { WhatsAppButton } from '../components/WhatsAppButton';
 
 export const Admissions = () => {
   const [enquirySuccess, setEnquirySuccess] = useState(null);
@@ -83,6 +84,12 @@ export const Admissions = () => {
           <p style={{ maxWidth: '650px', margin: '0 auto', color: '#cbd5e1', fontSize: '1.05rem' }}>
             Join a vibrant community of high-achieving students. Follow our transparent, merit-focused admission workflow.
           </p>
+          <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <WhatsAppButton
+              text="Chat with Admissions on WhatsApp"
+              message="Hello MPUC Admissions, I would like to enquire about PU 1st Year admission eligibility, application dates, and fee structure."
+            />
+          </div>
         </div>
       </section>
 
@@ -245,13 +252,18 @@ export const Admissions = () => {
                   <p style={{ fontSize: '0.88rem', color: '#065f46', lineHeight: '1.6' }}>
                     Dear {enquirySuccess.studentName}, your enquiry for <strong>{enquirySuccess.preferredCombination}</strong> ({enquirySuccess.preferredStream}) has been lodged with the admissions office. Our counselling coordinator will get in touch at <strong>{enquirySuccess.parentPhone}</strong>.
                   </p>
-                  <button
-                    onClick={() => setEnquirySuccess(null)}
-                    className="btn btn-outline-primary btn-sm"
-                    style={{ marginTop: '1.5rem' }}
-                  >
-                    Submit Another Enquiry
-                  </button>
+                  <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center' }}>
+                    <WhatsAppButton
+                      text="Continue Admission Enquiry on WhatsApp"
+                      message={`Hello MPUC Admissions, I have submitted an online enquiry [Ref: ${enquirySuccess.referenceNo}] for ${enquirySuccess.studentName}. Stream: ${enquirySuccess.preferredStream} (${enquirySuccess.preferredCombination}). Please guide me on next steps.`}
+                    />
+                    <button
+                      onClick={() => setEnquirySuccess(null)}
+                      className="btn btn-outline-primary btn-sm"
+                    >
+                      Submit Another Enquiry
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit(onSubmitEnquiry)} className="card" style={{ padding: '2rem' }}>
@@ -419,7 +431,7 @@ export const Admissions = () => {
                   <input type="hidden" value="10th Standard" {...register('lastCompletedClass')} />
 
                   <div style={{ marginBottom: '1.25rem' }}>
-                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem', fontSize: '0.82rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem', fontSize: '0.82rem', color: 'var(--text-muted)', cursor: 'pointer', marginBottom: '0.5rem' }}>
                       <input
                         type="checkbox"
                         defaultChecked
@@ -427,6 +439,15 @@ export const Admissions = () => {
                         {...register('consentGiven', { required: 'Consent is required' })}
                       />
                       <span>I confirm the above details are authentic and consent to college contacting me regarding admissions.</span>
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem', fontSize: '0.82rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        defaultChecked
+                        style={{ marginTop: '3px' }}
+                        {...register('whatsappConsent')}
+                      />
+                      <span>Send official admission updates, counselling schedule, and alerts to my mobile on WhatsApp.</span>
                     </label>
                   </div>
 

@@ -1,0 +1,431 @@
+/* ==========================================================================
+   MPUC College - Floating WhatsApp Widget Styles
+   Official WhatsApp Brand Palette: #25D366, #128C7E, #075E54, #EFEAE2
+   ========================================================================== */
+
+:root {
+  --wa-primary: #25D366;
+  --wa-primary-dark: #128C7E;
+  --wa-header-bg: #075E54;
+  --wa-chat-bg: #efeae2;
+  --wa-bubble-bg: #ffffff;
+  --wa-bubble-out: #dcf8c6;
+  --wa-text-dark: #111b21;
+  --wa-text-muted: #667781;
+  --wa-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), 0 4px 10px rgba(37, 211, 102, 0.25);
+}
+
+/* Floating Launcher Button */
+.mpuc-wa-floating-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: var(--wa-primary);
+  color: #ffffff;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45), 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  outline: none;
+}
+
+.mpuc-wa-floating-btn:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 10px 28px rgba(37, 211, 102, 0.55), 0 4px 10px rgba(0, 0, 0, 0.2);
+  background-color: #20bd5a;
+}
+
+.mpuc-wa-floating-btn:active {
+  transform: scale(0.96);
+}
+
+/* Subtle Pulse Glow */
+.mpuc-wa-floating-btn::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  background: var(--wa-primary);
+  opacity: 0.4;
+  z-index: -1;
+  animation: waPulse 2.4s infinite;
+}
+
+@keyframes waPulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+  70% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* Welcome Tooltip Badge */
+.mpuc-wa-tooltip {
+  position: absolute;
+  right: 72px;
+  background: #ffffff;
+  color: #1f2937;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: waFadeIn 0.3s ease;
+}
+
+.mpuc-wa-tooltip::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 0 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent #ffffff;
+}
+
+/* Floating WhatsApp Card Modal */
+.mpuc-wa-popup {
+  position: fixed;
+  bottom: 96px;
+  right: 24px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  height: 510px;
+  max-height: calc(100vh - 120px);
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: var(--wa-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1050;
+  animation: waSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+@keyframes waSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Card Header */
+.mpuc-wa-header {
+  background: var(--wa-header-bg);
+  color: #ffffff;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mpuc-wa-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mpuc-wa-avatar-wrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wa-header-bg);
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.mpuc-wa-online-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 11px;
+  height: 11px;
+  background-color: var(--wa-primary);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+}
+
+.mpuc-wa-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.mpuc-wa-subtitle {
+  margin: 2px 0 0 0;
+  font-size: 0.75rem;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mpuc-wa-close-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.mpuc-wa-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Chat Body */
+.mpuc-wa-body {
+  flex: 1;
+  background-color: var(--wa-chat-bg);
+  background-image: radial-gradient(#d4cdba 0.8px, transparent 0.8px);
+  background-size: 16px 16px;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Inbound message bubble */
+.mpuc-wa-bubble {
+  background: var(--wa-bubble-bg);
+  color: var(--wa-text-dark);
+  padding: 12px 14px;
+  border-radius: 0 12px 12px 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  max-width: 88%;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  position: relative;
+}
+
+.mpuc-wa-bubble::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 8px 10px 0;
+  border-color: transparent #ffffff transparent transparent;
+}
+
+.mpuc-wa-bubble-author {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--wa-primary-dark);
+  margin-bottom: 3px;
+}
+
+.mpuc-wa-bubble-time {
+  font-size: 0.68rem;
+  color: var(--wa-text-muted);
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Quick Topic Pills */
+.mpuc-wa-chips-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--wa-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 6px 0 2px 0;
+}
+
+.mpuc-wa-chips-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mpuc-wa-chip {
+  background: #ffffff;
+  border: 1px solid #d1d7db;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  color: #111b21;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mpuc-wa-chip:hover {
+  background: #f0fdf4;
+  border-color: var(--wa-primary);
+  color: var(--wa-primary-dark);
+  transform: translateX(3px);
+}
+
+.mpuc-wa-chip.active {
+  background: #dcf8c6;
+  border-color: var(--wa-primary-dark);
+  font-weight: 600;
+}
+
+/* Footer / Input Area */
+.mpuc-wa-footer {
+  padding: 12px 14px;
+  background: #f0f2f5;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mpuc-wa-textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  resize: none;
+  font-family: inherit;
+  outline: none;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.mpuc-wa-textarea:focus {
+  border-color: var(--wa-primary-dark);
+}
+
+.mpuc-wa-submit-btn {
+  background-color: var(--wa-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(37, 211, 102, 0.35);
+  transition: all 0.2s ease;
+}
+
+.mpuc-wa-submit-btn:hover {
+  background-color: #20bd5a;
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+/* Contextual WhatsApp Buttons across pages */
+.mpuc-wa-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #25D366;
+  color: #ffffff !important;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+  transition: all 0.22s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.92rem;
+}
+
+.mpuc-wa-action-btn:hover {
+  background-color: #1eb857;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.45);
+  color: #ffffff !important;
+}
+
+.mpuc-wa-action-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  color: #25D366 !important;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: 2px solid #25D366;
+  text-decoration: none;
+  transition: all 0.22s ease;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.mpuc-wa-action-btn-outline:hover {
+  background-color: #25D366;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+/* Mobile adjustments */
+@media (max-width: 540px) {
+  .mpuc-wa-floating-btn {
+    bottom: 16px;
+    right: 16px;
+    width: 54px;
+    height: 54px;
+  }
+  .mpuc-wa-popup {
+    bottom: 80px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-width: calc(100vw - 24px);
+    height: 480px;
+  }
+  .mpuc-wa-tooltip {
+    display: none;
+  }
+}

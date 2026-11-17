@@ -6,7 +6,7 @@ import {
   Settings, LogOut, ArrowLeft, Shield, Menu, X, ExternalLink,
   FileText, Image as ImageIcon, Award, ClipboardList, GraduationCap,
   DollarSign, Layers, MessageSquareQuote, Globe, Mail,
-  ShieldCheck, History, FileSpreadsheet, Database, UserCog, Bot, Camera
+  ShieldCheck, History, FileSpreadsheet, Database, UserCog, Bot, Camera, MessageCircle
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
@@ -65,6 +65,7 @@ export const AdminLayout = () => {
     {
       title: 'COMMUNICATIONS & SEO',
       items: [
+        { name: 'WhatsApp Integration', path: '/admin/whatsapp', icon: MessageCircle },
         { name: 'Email & SMS History', path: '/admin/communication-history', icon: History },
         { name: 'AI Chatbot Management', path: '/admin/chatbot', icon: Bot },
         { name: 'Contact Messages', path: '/admin/contact-enquiries', icon: MessageSquare },

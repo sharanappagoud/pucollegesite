@@ -87,6 +87,7 @@ public class SecurityConfig {
                     "/api/v1/admission-enquiries/track/**",
                     "/uploads/**",
                     "/api/v1/chatbot/**",
+                    "/api/v1/whatsapp/**",
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-ui.html"
