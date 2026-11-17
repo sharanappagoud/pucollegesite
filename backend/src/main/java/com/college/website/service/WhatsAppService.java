@@ -97,7 +97,7 @@ public class WhatsAppService {
         dto.setWelcomeMessage(s.getWelcomeMessage());
         dto.setWelcomeSubtitle(s.getWelcomeSubtitle());
         dto.setPrefilledDefaultMessage(s.getPrefilledDefaultMessage());
-        dto.setBusinessAccountId(maskString(s.getBusinessAccountId() != null ? s.getBusinessAccountId() : cloudApiClient.getBusinessAccountId()));
+        dto.setBusinessAccountId(s.getBusinessAccountId() != null ? s.getBusinessAccountId() : cloudApiClient.getBusinessAccountId());
         dto.setPhoneNumberId(s.getPhoneNumberId() != null ? s.getPhoneNumberId() : cloudApiClient.getPhoneNumberId());
         dto.setApiVersion(s.getApiVersion() != null ? s.getApiVersion() : cloudApiClient.getApiVersion());
         dto.setWebhookVerifyToken(s.getWebhookVerifyToken());
@@ -123,7 +123,8 @@ public class WhatsAppService {
         if (dto.getWelcomeMessage() != null) s.setWelcomeMessage(dto.getWelcomeMessage());
         if (dto.getWelcomeSubtitle() != null) s.setWelcomeSubtitle(dto.getWelcomeSubtitle());
         if (dto.getPrefilledDefaultMessage() != null) s.setPrefilledDefaultMessage(dto.getPrefilledDefaultMessage());
-        if (dto.getPhoneNumberId() != null) s.setPhoneNumberId(dto.getPhoneNumberId());
+        if (dto.getBusinessAccountId() != null) s.setBusinessAccountId(dto.getBusinessAccountId().trim());
+        if (dto.getPhoneNumberId() != null) s.setPhoneNumberId(dto.getPhoneNumberId().trim());
         if (dto.getApiVersion() != null) s.setApiVersion(dto.getApiVersion());
         if (dto.getWebhookVerifyToken() != null) s.setWebhookVerifyToken(dto.getWebhookVerifyToken());
         if (dto.getAutoNotificationsEnabled() != null) s.setAutoNotificationsEnabled(dto.getAutoNotificationsEnabled());
