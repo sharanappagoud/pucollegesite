@@ -28,8 +28,8 @@ export const FloatingWhatsApp = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [config, setConfig] = useState({
-    phoneNumber: '918023456789',
-    displayPhoneNumber: '+91 80234 56789',
+    phoneNumber: '919743988354',
+    displayPhoneNumber: '+91 97439 88354',
     floatingEnabled: true,
     welcomeMessage: 'Chat with MPUC College',
     welcomeSubtitle: 'Typically replies within a few minutes',

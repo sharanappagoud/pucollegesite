@@ -129,7 +129,7 @@ export const Contact = () => {
                       Fast-track chat with admissions coordinators and college counselors.
                     </p>
                     <WhatsAppButton
-                      text="Chat on WhatsApp (+91 80234 56789)"
+                      text="Chat on WhatsApp (+91 97439 88354)"
                       message="Hello MPUC College, I have a general enquiry regarding admissions, campus visits, or college timings."
                     />
                   </div>

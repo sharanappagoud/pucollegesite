@@ -62,7 +62,7 @@ app:
     verify-token: ${WHATSAPP_VERIFY_TOKEN:mpuc_whatsapp_verify_token_2026}
     app-secret: ${WHATSAPP_APP_SECRET:}
     api-url: ${WHATSAPP_API_URL:https://graph.facebook.com}
-    default-phone: ${WHATSAPP_DEFAULT_PHONE:918023456789}
+    default-phone: ${WHATSAPP_DEFAULT_PHONE:919743988354}
 
 springdoc:
   api-docs:

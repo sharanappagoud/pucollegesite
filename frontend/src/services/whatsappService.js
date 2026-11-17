@@ -1,9 +1,9 @@
 import api from './api';
 
-// Fallback demo/offline configuration
-const DEFAULT_WHATSAPP_CONFIG = {
-  phoneNumber: '918023456789',
-  displayPhoneNumber: '+91 80234 56789',
+// Verified default configuration
+export const DEFAULT_WHATSAPP_CONFIG = {
+  phoneNumber: '919743988354',
+  displayPhoneNumber: '+91 97439 88354',
   floatingEnabled: true,
   welcomeMessage: 'Chat with MPUC College',
   welcomeSubtitle: 'Typically replies within a few minutes',
@@ -18,15 +18,31 @@ const DEFAULT_WHATSAPP_CONFIG = {
   isCloudApiConfigured: false
 };
 
+let cachedConfig = { ...DEFAULT_WHATSAPP_CONFIG };
+let fetchPromise = null;
+
 export const getPublicWhatsAppConfig = async () => {
-  try {
-    const res = await api.get('/whatsapp/config');
-    return res.data || res || DEFAULT_WHATSAPP_CONFIG;
-  } catch (error) {
-    console.warn('Failed to load WhatsApp public config from backend, using default fallback:', error);
-    return DEFAULT_WHATSAPP_CONFIG;
-  }
+  if (fetchPromise) return fetchPromise;
+  fetchPromise = (async () => {
+    try {
+      const res = await api.get('/whatsapp/config');
+      const data = res.data || res;
+      if (data && data.phoneNumber) {
+        cachedConfig = { ...DEFAULT_WHATSAPP_CONFIG, ...data };
+      }
+      return cachedConfig;
+    } catch (error) {
+      console.warn('Failed to load WhatsApp public config from backend, using default:', error);
+      return cachedConfig;
+    } finally {
+      fetchPromise = null;
+    }
+  })();
+  return fetchPromise;
 };
+
+export const getCachedWhatsAppPhone = () => cachedConfig.phoneNumber || '919743988354';
+export const getCachedWhatsAppDisplayPhone = () => cachedConfig.displayPhoneNumber || '+91 97439 88354';
 
 export const recordWhatsAppOptIn = async (optInData) => {
   try {
@@ -45,7 +61,11 @@ export const getAdminWhatsAppSettings = async () => {
 
 export const updateAdminWhatsAppSettings = async (settings) => {
   const res = await api.put('/admin/whatsapp/settings', settings);
-  return res.data || res;
+  const data = res.data || res;
+  if (data && data.phoneNumber) {
+    cachedConfig = { ...cachedConfig, ...data };
+  }
+  return data;
 };
 
 export const getAdminWhatsAppTemplates = async () => {
@@ -84,8 +104,8 @@ export const sendAdminWhatsAppMessage = async (sendData) => {
 };
 
 export const buildWhatsAppUrl = (phone, text) => {
-  if (!phone) return '#';
-  const cleanPhone = phone.replace(/[^0-9]/g, '');
+  const targetPhone = phone || getCachedWhatsAppPhone();
+  const cleanPhone = targetPhone.replace(/[^0-9]/g, '');
   const encodedText = encodeURIComponent(text || '');
   return `https://wa.me/${cleanPhone}?text=${encodedText}`;
 };

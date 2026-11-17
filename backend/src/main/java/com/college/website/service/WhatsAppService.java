@@ -50,8 +50,8 @@ public class WhatsAppService {
     public WhatsAppSetting getOrCreateSettings() {
         return settingRepository.findFirstByOrderByIdAsc().orElseGet(() -> {
             WhatsAppSetting defaultSetting = new WhatsAppSetting();
-            defaultSetting.setPhoneNumber("918023456789");
-            defaultSetting.setDisplayPhoneNumber("+91 80234 56789");
+            defaultSetting.setPhoneNumber("919743988354");
+            defaultSetting.setDisplayPhoneNumber("+91 97439 88354");
             defaultSetting.setFloatingEnabled(true);
             defaultSetting.setWelcomeMessage("Chat with MPUC College");
             defaultSetting.setWelcomeSubtitle("Typically replies within a few minutes");

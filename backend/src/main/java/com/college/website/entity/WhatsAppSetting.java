@@ -12,10 +12,10 @@ public class WhatsAppSetting {
     private Long id;
 
     @Column(name = "phone_number", nullable = false, length = 30)
-    private String phoneNumber = "918023456789";
+    private String phoneNumber = "919743988354";
 
     @Column(name = "display_phone_number", length = 50)
-    private String displayPhoneNumber = "+91 80234 56789";
+    private String displayPhoneNumber = "+91 97439 88354";
 
     @Column(name = "floating_enabled")
     private Boolean floatingEnabled = true;

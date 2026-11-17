@@ -1,17 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { WhatsAppIcon } from './FloatingWhatsApp';
-import { buildWhatsAppUrl } from '../services/whatsappService';
+import { buildWhatsAppUrl, getPublicWhatsAppConfig, getCachedWhatsAppPhone } from '../services/whatsappService';
 
 export const WhatsAppButton = ({
   text = 'Chat on WhatsApp',
   message = 'Hello MPUC College, I would like to get more information.',
-  phoneNumber = '918023456789',
+  phoneNumber = null,
   variant = 'solid', // 'solid' or 'outline'
   className = '',
   iconSize = 20,
   style = {}
 }) => {
-  const url = buildWhatsAppUrl(phoneNumber, message);
+  const [activePhone, setActivePhone] = useState(phoneNumber || getCachedWhatsAppPhone());
+
+  useEffect(() => {
+    if (!phoneNumber) {
+      getPublicWhatsAppConfig().then((cfg) => {
+        if (cfg && cfg.phoneNumber) {
+          setActivePhone(cfg.phoneNumber);
+        }
+      });
+    }
+  }, [phoneNumber]);
+
+  const targetPhone = phoneNumber || activePhone;
+  const url = buildWhatsAppUrl(targetPhone, message);
 
   const buttonClass = variant === 'outline'
     ? `mpuc-wa-action-btn-outline ${className}`
