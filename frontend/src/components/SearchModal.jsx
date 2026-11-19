@@ -335,7 +335,7 @@ export const SearchModal = ({ isOpen, onClose }) => {
 
     setResults(unique);
     setSelectedIndex(0);
-  }, [query, liveExams]);
+  }, [query]);
 
   const handleSelectResult = (item) => {
     onClose();
