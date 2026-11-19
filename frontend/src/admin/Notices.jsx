@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import api from '../services/api';
 
 const QUICK_LINKS = [
-  { label: '📅 Examinations', url: '/examinations' },
   { label: '🎓 Online Admissions', url: '/admissions#enquiry-form' },
   { label: '💰 Scholarships & Fees', url: '/admissions#scholarships' },
   { label: '📰 News & Circulars', url: '/news' },
@@ -40,7 +39,7 @@ export const Notices = () => {
     setEditingNotice(null);
     reset({
       title: '',
-      documentUrl: '/examinations',
+      documentUrl: '/news',
       isImportant: true, // Default to true so it immediately shows on the public ticker!
       publishedAt: new Date().toISOString().slice(0, 10),
       expiresAt: ''
@@ -302,7 +301,7 @@ export const Notices = () => {
                 <input 
                   type="text" 
                   className="form-control" 
-                  placeholder="e.g. /examinations, /admissions#scholarships, or https://... PDF"
+                  placeholder="e.g. /news, /admissions#scholarships, or https://... PDF"
                   {...register('documentUrl')} 
                 />
 

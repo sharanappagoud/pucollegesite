@@ -65,17 +65,8 @@ const NAV_ITEMS_CONFIG = [
     ]
   },
   {
-    id: 'examinations',
-    order: 5,
-    defaultLabel: 'Examinations',
-    path: '/examinations',
-    showKey: 'nav_show_examinations',
-    labelKey: 'nav_label_examinations',
-    description: 'PU Board & preparatory exam timetables, question banks and blueprints.',
-  },
-  {
     id: 'faculty',
-    order: 6,
+    order: 5,
     defaultLabel: 'Faculty',
     path: '/faculty',
     showKey: 'nav_show_faculty',

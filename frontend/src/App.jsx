@@ -9,7 +9,6 @@ import { Home } from './pages/Home';
 import { About } from './pages/About';
 import { Academics } from './pages/Academics';
 import { Admissions } from './pages/Admissions';
-import { Examinations as ExaminationsPage } from './pages/Examinations';
 import { Faculty } from './pages/Faculty';
 import { Facilities } from './pages/Facilities';
 import { Gallery } from './pages/Gallery';
@@ -41,7 +40,6 @@ import { Banners as AdminBanners } from './admin/Banners';
 import { PrincipalDesk as AdminPrincipalDesk } from './admin/PrincipalDesk';
 import { Achievements as AdminAchievements } from './admin/Achievements';
 import { StudentApplications as AdminStudentApplications } from './admin/StudentApplications';
-import { Examinations as AdminExaminations } from './admin/Examinations';
 import { Scholarships as AdminScholarships } from './admin/Scholarships';
 import { Departments as AdminDepartments } from './admin/Departments';
 import { Testimonials as AdminTestimonials } from './admin/Testimonials';
@@ -67,7 +65,6 @@ export function App() {
         <Route path="about" element={<About />} />
         <Route path="academics" element={<Academics />} />
         <Route path="admissions" element={<Admissions />} />
-        <Route path="examinations" element={<ExaminationsPage />} />
         <Route path="faculty" element={<Faculty />} />
         <Route path="facilities" element={<Facilities />} />
         <Route path="gallery" element={<Gallery />} />
@@ -113,7 +110,6 @@ export function App() {
         <Route path="principal-desk" element={<AdminPrincipalDesk />} />
         <Route path="achievements" element={<AdminAchievements />} />
         <Route path="students" element={<AdminStudentApplications />} />
-        <Route path="examinations" element={<AdminExaminations />} />
         <Route path="scholarships" element={<AdminScholarships />} />
         <Route path="departments" element={<AdminDepartments />} />
         <Route path="testimonials" element={<AdminTestimonials />} />

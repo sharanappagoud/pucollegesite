@@ -42,7 +42,6 @@ export const AdminLayout = () => {
       title: 'ACADEMICS & FACULTY',
       items: [
         { name: 'Courses & Combinations', path: '/admin/courses', icon: BookOpen },
-        { name: 'Examination Management', path: '/admin/examinations', icon: GraduationCap },
         { name: 'Academic Calendar', path: '/admin/calendar', icon: CalendarDays },
         { name: 'Faculty Profiles', path: '/admin/faculty', icon: Users },
         { name: 'Staff & Departments', path: '/admin/departments', icon: Layers }

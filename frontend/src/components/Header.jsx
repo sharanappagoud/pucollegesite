@@ -297,14 +297,6 @@ export const Header = () => {
                 </li>
               )}
 
-              {isNavVisible('nav_show_examinations') && (
-                <li className="nav-item">
-                  <NavLink to="/examinations" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                    {getNavLabel('nav_label_examinations', 'Examinations')}
-                  </NavLink>
-                </li>
-              )}
-
               {isNavVisible('nav_show_faculty') && (
                 <li className="nav-item">
                   <NavLink to="/faculty" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
@@ -542,11 +534,6 @@ export const Header = () => {
                 </div>
               )}
 
-              {isNavVisible('nav_show_examinations') && (
-                <NavLink to="/examinations" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
-                  {getNavLabel('nav_label_examinations', 'Examinations')}
-                </NavLink>
-              )}
               {isNavVisible('nav_show_faculty') && (
                 <NavLink to="/faculty" onClick={closeMobileMenu} className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}>
                   {getNavLabel('nav_label_faculty', 'Faculty')}

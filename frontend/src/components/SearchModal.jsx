@@ -67,65 +67,7 @@ const SITE_INDEX = [
     keywords: 'calendar academic year working days holidays vacation schedule term dates'
   },
 
-  // 2. Examinations & Assessments
-  {
-    title: 'Examination Timetables & Schedules',
-    category: 'Examinations',
-    path: '/examinations#timetables',
-    description: 'Live unit tests, mid-term examinations, preparatory mock boards, and state board timetable PDF downloads.',
-    keywords: 'timetable exam time table datesheet schedules date test mid term preparatory board pdf'
-  },
-  {
-    title: 'Model Question Papers & Blueprints',
-    category: 'Examinations',
-    path: '/examinations#question-papers',
-    description: 'Official Karnataka State KSEAB model question papers, blueprint weightages, and solved answer keys.',
-    keywords: 'model question paper blueprint previous papers solved answers sample paper questions'
-  },
-  {
-    title: '1st PUC Examination Overview',
-    category: 'Examinations',
-    path: '/examinations#1st-puc',
-    description: 'District level centralized question paper pattern, internal assessments, and 80+20 evaluation scheme.',
-    keywords: '1st puc first pu exam pattern assessment scheme marks guidelines'
-  },
-  {
-    title: '2nd PUC State Board Preparatory Exams',
-    category: 'Examinations',
-    path: '/examinations#2nd-puc',
-    description: 'State Board mock examinations, syllabus revisions, and state rank hall-of-fame preparation.',
-    keywords: '2nd puc second pu state board kseab preparatory mock exam final board'
-  },
-  {
-    title: 'Annual Practical Examination Schedules',
-    category: 'Examinations',
-    path: '/examinations#practicals',
-    description: 'Laboratory assessment batches for Physics, Chemistry, Biology, and Computer Science practicals.',
-    keywords: 'practical exam laboratory lab assessment viva records batches experiment'
-  },
-  {
-    title: 'Student Hall Ticket Verification & Portal',
-    category: 'Examinations',
-    path: '/examinations#hall-tickets',
-    description: 'Online student hall ticket clearance verification by roll number and date of birth.',
-    keywords: 'hall ticket admit card verification roll number student clearance entry card'
-  },
-  {
-    title: 'Examination Rules & Student Code of Conduct',
-    category: 'Examinations',
-    path: '/examinations#rules',
-    description: 'Strict guidelines on examination hall reporting, prohibited electronic gadgets, and disciplinary regulations.',
-    keywords: 'rules conduct discipline malpractice regulations uniform reporting time guidelines'
-  },
-  {
-    title: 'Examination Frequently Asked Questions (FAQs)',
-    category: 'Examinations',
-    path: '/examinations#faqs',
-    description: 'Clarifications on re-evaluation, supplementary assessments, marks card issuance, and attendance minimums.',
-    keywords: 'faqs questions doubts attendance supplementary revaluation marks card'
-  },
-
-  // 3. Admissions & Fees
+  // 2. Admissions & Fees
   {
     title: 'Admission Guidelines & Eligibility 2026-27',
     category: 'Admissions',
@@ -300,22 +242,8 @@ export const SearchModal = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [liveExams, setLiveExams] = useState([]);
   const inputRef = useRef(null);
   const navigate = useNavigate();
-
-  // Fetch live examinations from backend to merge dynamic data
-  useEffect(() => {
-    if (isOpen) {
-      api.get('/examinations')
-        .then(res => {
-          if (res.success && Array.isArray(res.data)) {
-            setLiveExams(res.data);
-          }
-        })
-        .catch(() => {});
-    }
-  }, [isOpen]);
 
   // Focus input automatically on open
   useEffect(() => {
@@ -364,16 +292,7 @@ export const SearchModal = ({ isOpen, onClose }) => {
 
     const words = trimmed.split(/\s+/).filter(Boolean);
 
-    // Merge static catalog with live examinations from backend
-    const dynamicExamItems = liveExams.map(exam => ({
-      title: `${exam.examName} (${exam.academicYear})`,
-      category: 'Examinations',
-      path: '/examinations#timetables',
-      description: `${exam.stream} Stream • Dates: ${exam.startDate} to ${exam.endDate}. ${exam.instructions || 'Official examination schedule with downloadable Timetable & Model Paper.'}`,
-      keywords: `exam ${exam.examName} ${exam.examType} ${exam.stream} ${exam.academicYear} timetable model paper`
-    }));
-
-    const combinedPool = [...dynamicExamItems, ...SITE_INDEX];
+    const combinedPool = SITE_INDEX;
 
     // Score and filter results
     const matched = combinedPool.map(item => {
@@ -608,10 +527,10 @@ export const SearchModal = ({ isOpen, onClose }) => {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.5rem' }}>
                   <button
-                    onClick={() => handleSelectResult({ path: '/examinations#timetables' })}
+                    onClick={() => handleSelectResult({ path: '/academics#academic-calendar' })}
                     style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 0.75rem', borderRadius: '8px', border: 'none', background: '#f8fafc', cursor: 'pointer', textAlign: 'left', fontSize: '0.85rem', color: 'var(--primary-900)' }}
                   >
-                    <Calendar size={16} color="var(--gold-600)" /> Examination Timetables
+                    <Calendar size={16} color="var(--gold-600)" /> Academic Calendar
                   </button>
                   <button
                     onClick={() => handleSelectResult({ path: '/academics?stream=SCIENCE' })}

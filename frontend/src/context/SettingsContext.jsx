@@ -63,7 +63,7 @@ const defaultSettings = {
   nav_show_admissions_enquiry: 'true',
   nav_show_admissions_track: 'true',
   nav_show_admissions_scholarships: 'true',
-  nav_show_examinations: 'true',
+  nav_show_examinations: 'false',
   nav_label_examinations: 'Examinations',
   nav_show_faculty: 'true',
   nav_label_faculty: 'Faculty',

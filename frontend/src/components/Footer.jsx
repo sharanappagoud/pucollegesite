@@ -97,7 +97,6 @@ export const Footer = () => {
             <ul className="footer-links">
               <li className="footer-link-item"><Link to="/about" className="footer-link">About College & Vision</Link></li>
               <li className="footer-link-item"><Link to="/admissions" className="footer-link">Admissions 2026-27</Link></li>
-              <li className="footer-link-item"><Link to="/examinations" className="footer-link">Examinations & Schedules</Link></li>
               <li className="footer-link-item"><Link to="/admissions#enquiry-form" className="footer-link">Online Admission Enquiry</Link></li>
               <li className="footer-link-item"><Link to="/faculty" className="footer-link">Distinguished Faculty</Link></li>
               <li className="footer-link-item"><Link to="/facilities" className="footer-link">Laboratories & Library</Link></li>

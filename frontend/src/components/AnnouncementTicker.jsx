@@ -17,13 +17,13 @@ export const AnnouncementTicker = () => {
           setNotices([
             {
               id: 1,
-              title: 'Admissions Open for 1st PUC (Science & Commerce) 2026-27 - Submit Online Enquiry Now!',
+              title: 'Welcome to Master Pre-University College - Admissions Open for 2026-27',
               documentUrl: '/admissions#enquiry-form'
             },
             {
               id: 2,
-              title: 'Important Circular: Schedule for First Unit Test Examinations',
-              documentUrl: '/examinations'
+              title: 'Important Circular: Check Latest Campus News & Updates',
+              documentUrl: '/news'
             }
           ]);
         }
@@ -32,13 +32,13 @@ export const AnnouncementTicker = () => {
         setNotices([
           {
             id: 1,
-            title: 'Admissions Open for 1st PUC (Science & Commerce) 2026-27 - Submit Online Enquiry Now!',
+            title: 'Welcome to Master Pre-University College - Admissions Open for 2026-27',
             documentUrl: '/admissions#enquiry-form'
           },
           {
             id: 2,
-            title: 'Important Circular: Schedule for First Unit Test Examinations',
-            documentUrl: '/examinations'
+            title: 'Important Circular: Check Latest Campus News & Updates',
+            documentUrl: '/news'
           }
         ]);
       });
@@ -59,16 +59,8 @@ export const AnnouncementTicker = () => {
     );
 
     if (!url || url === '#' || url.trim() === '' || url === '/examinations') {
-      if (lowerTitle.includes('unit test')) {
-        url = '/examinations#exam-unit-test';
-      } else if (lowerTitle.includes('mid term') || lowerTitle.includes('mid-term')) {
-        url = '/examinations#exam-mid-term';
-      } else if (lowerTitle.includes('preparatory')) {
-        url = '/examinations#exam-preparatory';
-      } else if (lowerTitle.includes('board') || lowerTitle.includes('annual')) {
-        url = '/examinations#exam-annual-board';
-      } else if (isExamNotice) {
-        url = '/examinations#timetables';
+      if (isExamNotice) {
+        url = '/news';
       } else if (
         lowerTitle.includes('scholarship') ||
         lowerTitle.includes('fee') ||
